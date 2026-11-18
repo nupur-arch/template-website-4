@@ -140,7 +140,7 @@ export function Footer() {
         {/* 2. MASTHEAD & SIGNATURE STAMP TIER */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8 pb-12 border-b border-warmblack-50/80">
           <div className="space-y-4 max-w-xl">
-            <Logo variant="full" size={42} className="text-white" />
+            <Logo variant="full" href="/" size={42} className="text-white" />
             <p className="font-serif text-sm text-paper-300 leading-relaxed">
               {siteConfig.description}
             </p>

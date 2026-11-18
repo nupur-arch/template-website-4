@@ -18,7 +18,7 @@ export function Logo({
   size = 32,
   className = "",
   animate = false,
-  href = "/",
+  href = null,
   monoColor = false,
 }: LogoProps) {
   // SVG Mark component

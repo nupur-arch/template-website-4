@@ -57,7 +57,7 @@ export function SafeImage({
         {/* Central Logo Mark */}
         <div className="relative z-10 flex flex-col items-center text-center space-y-3">
           <div className="p-3.5 rounded-2xl bg-white/70 dark:bg-black/40 backdrop-blur-sm border border-saffron/30 shadow-sm">
-            <Logo variant="mark" size={36} className="text-saffron" />
+            <Logo variant="mark" size={36} href={null} className="text-saffron" />
           </div>
           {category && (
             <span className="inline-block text-[10px] tracking-[0.25em] uppercase font-mono font-medium px-2.5 py-1 rounded-full bg-saffron/15 text-saffron-700 dark:text-saffron-300 border border-saffron/20">

@@ -54,7 +54,7 @@ export function Header() {
             title="Saffron Press — Home"
             aria-label="Saffron Press Home"
           >
-            <Logo variant="mark" size={26} className="text-saffron transition-transform group-hover:scale-105" />
+            <Logo variant="mark" size={26} href={null} className="text-saffron transition-transform group-hover:scale-105" />
             <div className="flex items-baseline gap-1">
               <span className="font-serif font-black text-sm tracking-tight text-white group-hover:text-saffron transition-colors">
                 SAFFRON
