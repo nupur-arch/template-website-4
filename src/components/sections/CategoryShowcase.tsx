@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowUpRight, Compass, Filter } from "lucide-react";
+import { ArrowUpRight, Compass, Clock, User, Sparkles } from "lucide-react";
 import { Article } from "@/types/article";
 import { SafeImage } from "@/components/ui/SafeImage";
+import { CategoryIcon } from "@/components/ui/CategoryIcon";
 import { siteConfig } from "@/content/site.config";
 import { formatTimeAgo } from "@/lib/utils";
 
@@ -20,7 +21,6 @@ export function CategoryShowcase({ articles }: CategoryShowcaseProps) {
   const col2Ref = useRef<HTMLDivElement>(null);
   const col3Ref = useRef<HTMLDivElement>(null);
 
-  // Group articles into 3 columns
   const col1Articles = articles.filter((_, i) => i % 3 === 0).slice(0, 4);
   const col2Articles = articles.filter((_, i) => i % 3 === 1).slice(0, 4);
   const col3Articles = articles.filter((_, i) => i % 3 === 2).slice(0, 4);
@@ -30,7 +30,6 @@ export function CategoryShowcase({ articles }: CategoryShowcaseProps) {
     if (prefersReduced) return;
 
     const ctx = gsap.context(() => {
-      // Scrub column 1 upward
       if (col1Ref.current) {
         gsap.fromTo(
           col1Ref.current,
@@ -48,7 +47,6 @@ export function CategoryShowcase({ articles }: CategoryShowcaseProps) {
         );
       }
 
-      // Scrub column 2 downward (opposite direction!)
       if (col2Ref.current) {
         gsap.fromTo(
           col2Ref.current,
@@ -66,7 +64,6 @@ export function CategoryShowcase({ articles }: CategoryShowcaseProps) {
         );
       }
 
-      // Scrub column 3 upward
       if (col3Ref.current) {
         gsap.fromTo(
           col3Ref.current,
@@ -104,8 +101,8 @@ export function CategoryShowcase({ articles }: CategoryShowcaseProps) {
                 05 / TILTED RUNWAY SHOWCASE
               </span>
               <span className="w-1.5 h-1.5 rounded-full bg-saffron" />
-              <span className="text-xs font-mono text-muted-foreground uppercase">
-                Counter-Scrolling 3D Columns
+              <span className="text-xs font-mono text-muted-foreground uppercase flex items-center gap-1">
+                <Sparkles className="w-3 h-3 text-saffron" /> Counter-Scrolling Columns
               </span>
             </div>
             <h2 className="font-serif text-3xl sm:text-5xl font-black text-foreground tracking-tight">
@@ -118,8 +115,9 @@ export function CategoryShowcase({ articles }: CategoryShowcaseProps) {
               <Link
                 key={cat.id}
                 href={`/category/${cat.slug}`}
-                className="px-3 py-1.5 rounded-full text-xs font-mono bg-paper-100 dark:bg-warmblack-200 border border-paper-300 dark:border-warmblack-100 hover:border-saffron text-foreground transition-colors flex items-center gap-1"
+                className="px-3 py-1.5 rounded-full text-xs font-mono bg-paper-100 dark:bg-warmblack-200 border border-paper-300 dark:border-warmblack-100 hover:border-saffron text-foreground transition-colors flex items-center gap-1.5"
               >
+                <CategoryIcon categorySlug={cat.slug} className="w-3 h-3 text-saffron" />
                 <span>{cat.name}</span>
                 <ArrowUpRight className="w-3 h-3 text-saffron" />
               </Link>
@@ -136,30 +134,30 @@ export function CategoryShowcase({ articles }: CategoryShowcaseProps) {
           }}
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            {/* Column 1 (Moving Up) */}
+            {/* Column 1 */}
             <div ref={col1Ref} className="space-y-6 sm:space-y-8 will-change-transform">
-              <div className="px-3 py-1.5 rounded-xl bg-warmblack text-paper-50 dark:bg-saffron dark:text-warmblack text-[11px] font-mono uppercase font-bold tracking-widest text-center shadow">
-                Dispatches • Fleet Alpha
+              <div className="px-3 py-1.5 rounded-xl bg-warmblack text-paper-50 dark:bg-saffron dark:text-warmblack text-[11px] font-mono uppercase font-bold tracking-widest text-center shadow flex items-center justify-center gap-1.5">
+                <Compass className="w-3.5 h-3.5" /> Fleet Alpha
               </div>
               {col1Articles.map((article) => (
                 <ColumnArticleCard key={article.id} article={article} />
               ))}
             </div>
 
-            {/* Column 2 (Moving Down) */}
+            {/* Column 2 */}
             <div ref={col2Ref} className="space-y-6 sm:space-y-8 will-change-transform">
-              <div className="px-3 py-1.5 rounded-xl bg-saffron text-warmblack text-[11px] font-mono uppercase font-bold tracking-widest text-center shadow">
-                Intelligence • Fleet Beta
+              <div className="px-3 py-1.5 rounded-xl bg-saffron text-warmblack text-[11px] font-mono uppercase font-bold tracking-widest text-center shadow flex items-center justify-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5" /> Fleet Beta
               </div>
               {col2Articles.map((article) => (
                 <ColumnArticleCard key={article.id} article={article} />
               ))}
             </div>
 
-            {/* Column 3 (Moving Up) */}
+            {/* Column 3 */}
             <div ref={col3Ref} className="space-y-6 sm:space-y-8 will-change-transform">
-              <div className="px-3 py-1.5 rounded-xl bg-warmblack text-paper-50 dark:bg-saffron dark:text-warmblack text-[11px] font-mono uppercase font-bold tracking-widest text-center shadow">
-                Frontiers • Fleet Gamma
+              <div className="px-3 py-1.5 rounded-xl bg-warmblack text-paper-50 dark:bg-saffron dark:text-warmblack text-[11px] font-mono uppercase font-bold tracking-widest text-center shadow flex items-center justify-center gap-1.5">
+                <Compass className="w-3.5 h-3.5" /> Fleet Gamma
               </div>
               {col3Articles.map((article) => (
                 <ColumnArticleCard key={article.id} article={article} />
@@ -187,15 +185,19 @@ function ColumnArticleCard({ article }: { article: Article }) {
           sizes="(max-width: 768px) 100vw, 360px"
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
-        <div className="absolute top-3 left-3 px-2 py-0.5 rounded bg-warmblack/80 backdrop-blur-sm text-saffron text-[9px] font-mono uppercase font-bold">
-          {article.category}
+        <div className="absolute top-3 left-3 px-2.5 py-0.5 rounded-full bg-warmblack/85 backdrop-blur-sm text-saffron text-[9px] font-mono uppercase font-bold flex items-center gap-1">
+          <CategoryIcon categorySlug={article.categorySlug} className="w-2.5 h-2.5" />
+          <span>{article.category}</span>
         </div>
       </div>
 
       <div className="space-y-2">
         <div className="text-[10px] font-mono text-muted-foreground flex items-center justify-between">
-          <span>{formatTimeAgo(article.publishedAt)}</span>
-          <span>{article.readTimeMinutes} min read</span>
+          <span className="flex items-center gap-1">
+            <Clock className="w-3 h-3 text-saffron" />
+            {formatTimeAgo(article.publishedAt)}
+          </span>
+          <span>{article.readTimeMinutes}m</span>
         </div>
         <h4 className="font-serif font-bold text-base text-foreground group-hover:text-saffron transition-colors line-clamp-2 leading-snug">
           {article.title}
@@ -206,9 +208,12 @@ function ColumnArticleCard({ article }: { article: Article }) {
       </div>
 
       <div className="mt-4 pt-3 border-t border-paper-200 dark:border-warmblack-200 flex items-center justify-between text-xs font-mono text-muted-foreground">
-        <span>By {article.author.name}</span>
-        <span className="text-saffron flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-          View &rarr;
+        <span className="flex items-center gap-1 truncate max-w-[70%]">
+          <User className="w-3 h-3 text-saffron" />
+          {article.author.name}
+        </span>
+        <span className="text-saffron flex items-center gap-1 group-hover:translate-x-1 transition-transform font-bold">
+          <ArrowUpRight className="w-3.5 h-3.5" />
         </span>
       </div>
     </Link>

@@ -2,17 +2,36 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Search, Menu, X, ArrowUpRight, Radio } from "lucide-react";
+import {
+  Search,
+  Menu,
+  X,
+  Flame,
+  Radio,
+  LayoutGrid,
+  TrendingUp,
+  BookmarkCheck,
+  Compass,
+  Camera,
+  Activity,
+  Mail,
+  Archive,
+  Palette,
+  Sparkles,
+  ArrowUpRight,
+} from "lucide-react";
 import { siteConfig } from "@/content/site.config";
 import { Logo } from "@/components/brand/Logo";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { SearchDialog } from "@/components/search/SearchDialog";
 import { useSmoothScroll } from "@/components/providers/SmoothScrollProvider";
+import { CategoryIcon } from "@/components/ui/CategoryIcon";
+import { cn } from "@/lib/utils";
 
 export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [currentUtc, setCurrentUtc] = useState<string>("");
+  const [activeSection, setActiveSection] = useState<string>("hero");
   const { scrollTo } = useSmoothScroll();
 
   // Setup Cmd/Ctrl+K keyboard shortcut
@@ -27,23 +46,23 @@ export function Header() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Update live UTC timecode
-  useEffect(() => {
-    const updateTime = () => {
-      const d = new Date();
-      setCurrentUtc(
-        d.toLocaleTimeString("en-GB", { timeZone: "UTC", hour: "2-digit", minute: "2-digit" }) + " UTC"
-      );
-    };
-    updateTime();
-    const interval = setInterval(updateTime, 30000);
-    return () => clearInterval(interval);
-  }, []);
+  const navItems = [
+    { id: "hero", label: "Top Stories", icon: Flame, href: "/#hero", badge: "20" },
+    { id: "breaking", label: "Wire Breaking", icon: Radio, href: "/#breaking", pulse: true },
+    { id: "latest", label: "Dispatch Grid", icon: LayoutGrid, href: "/#latest" },
+    { id: "trending", label: "Trending 10", icon: TrendingUp, href: "/#trending" },
+    { id: "editors-picks", label: "Editor's Picks", icon: BookmarkCheck, href: "/#editors-picks" },
+    { id: "categories", label: "Desk Runway", icon: Compass, href: "/#categories" },
+    { id: "photo-story", label: "Photo Prism", icon: Camera, href: "/#photo-story" },
+    { id: "live-stats", label: "Live Telemetry", icon: Activity, href: "/#live-stats" },
+    { id: "newsletter", label: "Broadside Pouch", icon: Mail, href: "/#newsletter" },
+  ];
 
   const handleNavClick = (href: string, e: React.MouseEvent) => {
     if (href.startsWith("/#") && window.location.pathname === "/") {
       e.preventDefault();
       const targetId = href.replace("/", "");
+      setActiveSection(targetId.replace("#", ""));
       scrollTo(targetId);
       setIsMobileMenuOpen(false);
     }
@@ -51,101 +70,135 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full bg-background/95 backdrop-blur-md border-b border-paper-300/80 dark:border-warmblack-100 transition-colors duration-200">
-        {/* Top Wire / Edition Bar */}
-        <div className="border-b border-paper-200/60 dark:border-warmblack-200/60 py-1.5 px-4 text-[10px] font-mono tracking-wider text-muted-foreground flex items-center justify-between">
-          <div className="flex items-center gap-3 overflow-hidden">
-            <span className="hidden sm:inline-block font-semibold text-foreground">
-              {siteConfig.edition}
-            </span>
-            <span className="hidden sm:inline-block text-paper-400">|</span>
-            <span className="flex items-center gap-1.5 text-saffron">
-              <span className="w-1.5 h-1.5 rounded-full bg-saffron animate-pulse" />
-              LONDON • NEW YORK • TOKYO
-            </span>
-            {currentUtc && (
-              <span className="text-foreground/80 font-medium">[{currentUtc}]</span>
-            )}
-          </div>
-          <div className="flex items-center gap-4">
+      {/* Floating Pinterest-Style Pill Header Container */}
+      <header className="fixed top-3 sm:top-4 inset-x-0 z-50 pointer-events-none px-3 sm:px-6 transition-all duration-300">
+        <div className="max-w-6xl mx-auto flex flex-col items-center gap-2">
+          {/* Main Floating Capsule Navigation Bar */}
+          <div className="pointer-events-auto w-full rounded-full bg-[#18130F]/90 dark:bg-[#120E0A]/92 backdrop-blur-2xl border border-white/10 dark:border-saffron/25 shadow-2xl px-3 sm:px-4 py-2 flex items-center justify-between gap-2 sm:gap-4 text-paper-50 transition-all duration-300">
+            {/* Left: Brand Identity Capsule */}
             <Link
-              href="/archive"
-              className="hover:text-foreground transition-colors hidden md:inline-block"
+              href="/"
+              className="flex items-center gap-2.5 px-2.5 py-1 rounded-full hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-saffron shrink-0 group"
+              title="Saffron Press — Frontpage"
             >
-              Dispatch Vault
+              <Logo variant="mark" size={28} className="text-saffron" />
+              <div className="flex items-baseline gap-1">
+                <span className="font-serif font-black text-sm sm:text-base tracking-tight text-white group-hover:text-saffron transition-colors">
+                  SAFFRON
+                </span>
+                <span className="font-serif italic font-normal text-xs sm:text-sm text-saffron">
+                  PRESS
+                </span>
+              </div>
             </Link>
-            <Link
-              href="/brand"
-              className="text-saffron hover:underline font-semibold flex items-center gap-0.5"
-            >
-              Brand Spec
-              <ArrowUpRight className="w-2.5 h-2.5" />
-            </Link>
-          </div>
-        </div>
 
-        {/* Main Masthead Bar */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between gap-4">
-          {/* Logo */}
-          <Logo variant="full" size={38} />
+            {/* Center: Pinterest-Style Icon Navigation Pills (Desktop) */}
+            <nav className="hidden lg:flex items-center gap-1 bg-white/5 dark:bg-black/30 p-1 rounded-full border border-white/5">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = activeSection === item.id;
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-5 text-xs font-sans font-medium text-foreground/80">
-            {siteConfig.navLinks.slice(0, 7).map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={(e) => handleNavClick(item.href, e)}
-                className="hover:text-saffron transition-colors relative py-1 focus:outline-none focus-visible:text-saffron"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+                return (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    onClick={(e) => handleNavClick(item.href, e)}
+                    className={cn(
+                      "group relative flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono transition-all duration-200 select-none",
+                      isActive
+                        ? "bg-saffron text-warmblack font-bold shadow-md"
+                        : "text-paper-300 hover:text-white hover:bg-white/10"
+                    )}
+                    title={item.label}
+                  >
+                    <Icon
+                      className={cn(
+                        "w-4 h-4 transition-transform group-hover:scale-110",
+                        item.pulse && "text-red-400 animate-pulse",
+                        isActive ? "text-warmblack" : "text-saffron"
+                      )}
+                    />
+                    <span className="text-[11px] font-medium hidden xl:inline">
+                      {item.label}
+                    </span>
 
-          {/* Right Action Controls: Search, Theme Toggle, Mobile Menu */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Search Trigger Button */}
+                    {/* Micro Badge */}
+                    {item.badge && (
+                      <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-black/40 text-saffron font-mono">
+                        {item.badge}
+                      </span>
+                    )}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Center-Right: Pinterest Search Pill */}
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-paper-200/80 dark:bg-warmblack-200/80 hover:bg-paper-300 dark:hover:bg-warmblack-100 border border-paper-300 dark:border-warmblack-100 transition-all text-xs font-mono text-muted-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-saffron"
-              aria-label="Open search dossier"
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/10 text-xs font-mono text-paper-300 hover:text-white transition-all shadow-inner focus:outline-none focus-visible:ring-2 focus-visible:ring-saffron"
+              aria-label="Open global search dossier"
+              title="Search (⌘K)"
             >
-              <Search className="w-3.5 h-3.5 text-saffron" />
-              <span className="hidden sm:inline">Search...</span>
-              <kbd className="hidden md:inline-block px-1.5 py-0.5 text-[9px] bg-paper-100 dark:bg-warmblack-100 rounded border border-paper-300/80 dark:border-warmblack-50">
+              <Search className="w-3.5 h-3.5 text-saffron shrink-0" />
+              <span className="hidden sm:inline text-[11px] font-sans">Search...</span>
+              <kbd className="hidden md:inline-block px-1.5 py-0.5 text-[9px] font-mono bg-black/40 text-saffron rounded border border-white/10">
                 ⌘K
               </kbd>
             </button>
 
-            {/* Light / Dark Mode Toggle */}
-            <ThemeToggle />
+            {/* Right: Circular Icon Action Buttons (Pinterest Style) */}
+            <div className="flex items-center gap-1.5 shrink-0">
+              {/* Vault / Archive Icon Button */}
+              <Link
+                href="/archive"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/10 hover:bg-saffron hover:text-warmblack text-paper-200 flex items-center justify-center transition-all duration-200"
+                title="Chronological Vault"
+                aria-label="Chronological Vault"
+              >
+                <Archive className="w-4 h-4" />
+              </Link>
 
-            {/* Mobile Hamburger Button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg border border-paper-300 dark:border-warmblack-100 text-foreground hover:bg-paper-200 dark:hover:bg-warmblack-200"
-              aria-label="Toggle navigation menu"
-            >
-              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+              {/* Brand Guidelines Icon Button */}
+              <Link
+                href="/brand"
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/10 hover:bg-saffron hover:text-warmblack text-paper-200 flex items-center justify-center transition-all duration-200"
+                title="Brand System & Spec"
+                aria-label="Brand System & Spec"
+              >
+                <Palette className="w-4 h-4" />
+              </Link>
+
+              {/* Theme Toggle Icon Button */}
+              <ThemeToggle />
+
+              {/* Mobile Drawer Hamburger Button */}
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="lg:hidden w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
+                aria-label="Toggle navigation drawer"
+              >
+                {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Secondary Category Ribbon */}
-        <div className="hidden md:flex border-t border-paper-200/70 dark:border-warmblack-200/60 overflow-x-auto no-scrollbar max-w-7xl mx-auto px-4 sm:px-6 py-2 items-center gap-6 text-[11px] font-mono tracking-widest uppercase text-muted-foreground">
-          <span className="text-saffron font-bold flex items-center gap-1 shrink-0">
-            <Radio className="w-3 h-3 text-saffron animate-pulse" /> DESKS:
-          </span>
-          {siteConfig.categories.map((cat) => (
-            <Link
-              key={cat.id}
-              href={`/category/${cat.slug}`}
-              className="hover:text-foreground hover:border-b-2 hover:border-saffron pb-0.5 transition-all whitespace-nowrap"
-            >
-              {cat.name}
-            </Link>
-          ))}
+          {/* Secondary Pinterest Category Chips Pill Carousel */}
+          <div className="pointer-events-auto hidden sm:flex items-center gap-2 overflow-x-auto no-scrollbar max-w-5xl py-1 px-3 rounded-full bg-[#18130F]/80 dark:bg-[#120E0A]/85 backdrop-blur-xl border border-white/10 shadow-lg">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-saffron font-bold flex items-center gap-1 pl-1 pr-2 border-r border-white/10 shrink-0">
+              <Sparkles className="w-3 h-3 text-saffron" /> DESKS:
+            </span>
+            {siteConfig.categories.map((cat) => (
+              <Link
+                key={cat.id}
+                href={`/category/${cat.slug}`}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono bg-white/5 hover:bg-saffron hover:text-warmblack text-paper-300 transition-all duration-200 shrink-0 border border-transparent hover:border-saffron/40"
+              >
+                <CategoryIcon categorySlug={cat.slug} className="w-3 h-3 text-saffron" />
+                <span>{cat.name}</span>
+              </Link>
+            ))}
+          </div>
         </div>
       </header>
 
@@ -153,27 +206,42 @@ export function Header() {
       {isMobileMenuOpen && (
         <div
           data-lenis-prevent
-          className="fixed inset-0 top-[108px] z-30 lg:hidden bg-background/98 backdrop-blur-xl border-t border-paper-300 dark:border-warmblack-100 overflow-y-auto p-6 space-y-6"
+          className="fixed inset-0 top-[72px] z-40 lg:hidden bg-background/98 backdrop-blur-2xl border-t border-paper-300 dark:border-warmblack-100 overflow-y-auto p-6 space-y-6 animate-in fade-in duration-200"
         >
           <div className="space-y-2">
-            <div className="text-[10px] font-mono uppercase tracking-widest text-saffron">
-              Main Sections
+            <div className="text-[10px] font-mono uppercase tracking-widest text-saffron flex items-center gap-1.5">
+              <Flame className="w-3.5 h-3.5" /> Portal Sections
             </div>
-            {siteConfig.navLinks.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={(e) => handleNavClick(item.href, e)}
-                className="block text-lg font-serif font-bold text-foreground hover:text-saffron py-2 border-b border-paper-200 dark:border-warmblack-200"
-              >
-                {item.label}
-              </Link>
-            ))}
+            <div className="grid grid-cols-1 gap-1">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    onClick={(e) => handleNavClick(item.href, e)}
+                    className="flex items-center justify-between p-3 rounded-2xl hover:bg-paper-200 dark:hover:bg-warmblack-200 text-foreground transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-saffron/15 text-saffron flex items-center justify-center">
+                        <Icon className="w-4 h-4" />
+                      </div>
+                      <span className="font-serif font-bold text-base">{item.label}</span>
+                    </div>
+                    {item.badge && (
+                      <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-saffron text-warmblack font-bold">
+                        {item.badge}
+                      </span>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
 
-          <div className="space-y-3 pt-4">
-            <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
-              Editorial Categories
+          <div className="space-y-3 pt-4 border-t border-paper-200 dark:border-warmblack-200">
+            <div className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+              <Compass className="w-3.5 h-3.5 text-saffron" /> Editorial Desks
             </div>
             <div className="grid grid-cols-2 gap-2">
               {siteConfig.categories.map((cat) => (
@@ -181,9 +249,10 @@ export function Header() {
                   key={cat.id}
                   href={`/category/${cat.slug}`}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2.5 rounded-lg border border-paper-200 dark:border-warmblack-100 text-xs font-serif font-medium hover:text-saffron hover:border-saffron/40"
+                  className="flex items-center gap-2 p-2.5 rounded-xl border border-paper-200 dark:border-warmblack-100 text-xs font-mono hover:bg-saffron hover:text-warmblack transition-colors"
                 >
-                  {cat.name}
+                  <CategoryIcon categorySlug={cat.slug} className="w-3.5 h-3.5 text-saffron" />
+                  <span className="truncate">{cat.name}</span>
                 </Link>
               ))}
             </div>
@@ -191,7 +260,7 @@ export function Header() {
         </div>
       )}
 
-      {/* Search Modal */}
+      {/* Global Search Dossier Modal */}
       <SearchDialog isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </>
   );

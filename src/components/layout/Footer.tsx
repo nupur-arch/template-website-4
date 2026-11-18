@@ -2,10 +2,23 @@
 
 import { useRef, useState, useCallback } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Shield, Globe, Terminal, ArrowUp } from "lucide-react";
+import {
+  ArrowUpRight,
+  Shield,
+  Globe,
+  Terminal,
+  ArrowUp,
+  FileText,
+  Bookmark,
+  Sparkles,
+  Compass,
+  Radio,
+  Lock,
+} from "lucide-react";
 import { siteConfig } from "@/content/site.config";
 import { Logo } from "@/components/brand/Logo";
 import { SignatureStamp } from "@/components/brand/SignatureStamp";
+import { CategoryIcon } from "@/components/ui/CategoryIcon";
 import { useSmoothScroll } from "@/components/providers/SmoothScrollProvider";
 
 export function Footer() {
@@ -45,7 +58,10 @@ export function Footer() {
             </p>
             <div className="flex items-center gap-3 text-xs font-mono text-saffron">
               <span className="w-2 h-2 rounded-full bg-saffron animate-pulse" />
-              <span>Independent Dispatches • Est. 2026</span>
+              <span className="flex items-center gap-1.5">
+                <Radio className="w-3.5 h-3.5" />
+                Independent Dispatches • Est. 2026
+              </span>
             </div>
           </div>
 
@@ -58,8 +74,8 @@ export function Footer() {
             />
             <button
               onClick={() => scrollTo(0)}
-              className="p-3 rounded-full bg-warmblack-100 hover:bg-saffron hover:text-warmblack border border-warmblack-50 transition-colors"
-              aria-label="Scroll back to masthead"
+              className="p-3.5 rounded-full bg-warmblack-100 hover:bg-saffron hover:text-warmblack border border-warmblack-50 transition-all hover:scale-110 active:scale-95 shadow-lg"
+              aria-label="Scroll back to top"
               title="Return to top"
             >
               <ArrowUp className="w-5 h-5" />
@@ -71,17 +87,23 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 py-16 border-b border-warmblack-50/80">
           {siteConfig.footerLinks.map((column, idx) => (
             <div key={idx} className="space-y-4">
-              <h4 className="text-xs font-mono uppercase tracking-widest text-saffron font-bold">
-                {column.title}
+              <h4 className="text-xs font-mono uppercase tracking-widest text-saffron font-bold flex items-center gap-1.5">
+                {idx === 0 && <Compass className="w-3.5 h-3.5 text-saffron" />}
+                {idx === 1 && <FileText className="w-3.5 h-3.5 text-saffron" />}
+                {idx === 2 && <Shield className="w-3.5 h-3.5 text-saffron" />}
+                <span>{column.title}</span>
               </h4>
               <ul className="space-y-2.5 text-xs font-sans text-paper-300">
                 {column.links.map((link, lIdx) => (
                   <li key={lIdx}>
                     <Link
                       href={link.href}
-                      className="hover:text-saffron transition-colors block py-0.5"
+                      className="hover:text-saffron transition-colors flex items-center justify-between group py-0.5"
                     >
-                      {link.label}
+                      <span className="group-hover:translate-x-0.5 transition-transform">
+                        {link.label}
+                      </span>
+                      <ArrowUpRight className="w-3 h-3 text-saffron opacity-0 group-hover:opacity-100 transition-opacity" />
                     </Link>
                   </li>
                 ))}
@@ -89,10 +111,10 @@ export function Footer() {
             </div>
           ))}
 
-          {/* Socials & Wire Feed */}
+          {/* Socials & Wire Feed with Icons */}
           <div className="space-y-4">
-            <h4 className="text-xs font-mono uppercase tracking-widest text-saffron font-bold">
-              Teletype Network
+            <h4 className="text-xs font-mono uppercase tracking-widest text-saffron font-bold flex items-center gap-1.5">
+              <Terminal className="w-3.5 h-3.5 text-saffron" /> Teletype Network
             </h4>
             <ul className="space-y-2.5 text-xs font-mono text-paper-300">
               {siteConfig.socials.map((soc, idx) => (
@@ -101,11 +123,15 @@ export function Footer() {
                     href={soc.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hover:text-saffron transition-colors flex items-center justify-between group"
+                    className="hover:text-saffron transition-colors flex items-center justify-between group py-0.5"
                   >
-                    <span>{soc.platform}</span>
-                    <span className="text-[10px] text-paper-400 group-hover:text-saffron">
-                      {soc.handle}
+                    <span className="flex items-center gap-1.5">
+                      <Globe className="w-3.5 h-3.5 text-saffron" />
+                      <span>{soc.platform}</span>
+                    </span>
+                    <span className="text-[10px] text-paper-400 group-hover:text-saffron flex items-center gap-0.5">
+                      <span>{soc.handle}</span>
+                      <ArrowUpRight className="w-2.5 h-2.5" />
                     </span>
                   </a>
                 </li>
@@ -164,15 +190,20 @@ export function Footer() {
             &copy; {new Date().getFullYear()} Saffron Press Daily Syndicate. All rights reserved.
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/about" className="hover:text-saffron">
-              Editorial Charter
+            <Link href="/about" className="hover:text-saffron flex items-center gap-1">
+              <Shield className="w-3 h-3 text-saffron" />
+              <span>Editorial Charter</span>
             </Link>
             <span>•</span>
-            <Link href="/brand" className="hover:text-saffron">
-              Design Guidelines
+            <Link href="/brand" className="hover:text-saffron flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-saffron" />
+              <span>Design Guidelines</span>
             </Link>
             <span>•</span>
-            <span className="text-saffron">London / Tokyo / NYC Bureaus</span>
+            <span className="text-saffron flex items-center gap-1">
+              <Globe className="w-3 h-3" />
+              <span>London / Tokyo / NYC Bureaus</span>
+            </span>
           </div>
         </div>
       </div>

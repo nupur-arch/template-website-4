@@ -4,9 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Camera, Box, ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { Camera, Box, ArrowUpRight, Sparkles, User, Clock, Eye } from "lucide-react";
 import { Article } from "@/types/article";
 import { SafeImage } from "@/components/ui/SafeImage";
+import { CategoryIcon } from "@/components/ui/CategoryIcon";
 import { cn } from "@/lib/utils";
 
 interface PhotoStoryCubeProps {
@@ -19,7 +20,6 @@ export function PhotoStoryCube({ faces }: PhotoStoryCubeProps) {
   const cubeRef = useRef<HTMLDivElement>(null);
 
   const [activeFace, setActiveFace] = useState(0);
-  const [manualRotation, setManualRotation] = useState<number | null>(null);
 
   // Geometry: 4-faced prism with depth 250px
   const translateZ = 250;
@@ -84,8 +84,8 @@ export function PhotoStoryCube({ faces }: PhotoStoryCubeProps) {
               06 / VISUAL MONOGRAPH
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-saffron" />
-            <span className="text-xs font-mono text-paper-400 uppercase">
-              3D Rotating Prism Prism
+            <span className="text-xs font-mono text-paper-400 uppercase flex items-center gap-1">
+              <Box className="w-3 h-3 text-saffron" /> 3D Prism Faces
             </span>
           </div>
           <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
@@ -94,7 +94,7 @@ export function PhotoStoryCube({ faces }: PhotoStoryCubeProps) {
         </div>
 
         {/* Current Face Pill */}
-        <div className="flex items-center gap-2 bg-warmblack-200/90 border border-warmblack-50 px-3 py-1.5 rounded-full text-xs font-mono text-paper-300">
+        <div className="flex items-center gap-2 bg-warmblack-200/90 border border-warmblack-50 px-3.5 py-1.5 rounded-full text-xs font-mono text-paper-300 shadow-md">
           <Box className="w-3.5 h-3.5 text-saffron animate-spin-slow" />
           <span>Face {activeFace + 1} of 4</span>
         </div>
@@ -115,7 +115,6 @@ export function PhotoStoryCube({ faces }: PhotoStoryCubeProps) {
         >
           {items.map((face, index) => {
             const angle = index * 90;
-            const isCurrent = activeFace === index;
 
             return (
               <div
@@ -141,18 +140,19 @@ export function PhotoStoryCube({ faces }: PhotoStoryCubeProps) {
 
                   {/* Face Label Ribbon */}
                   <div className="absolute top-4 inset-x-4 flex items-center justify-between z-10">
-                    <span className="px-3 py-1 rounded-full bg-warmblack/80 backdrop-blur-md border border-white/10 text-saffron font-mono text-[10px] font-bold uppercase tracking-wider">
+                    <span className="px-3 py-1 rounded-full bg-warmblack/85 backdrop-blur-md border border-white/10 text-saffron font-mono text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md">
+                      <Camera className="w-3 h-3 text-saffron" />
                       {face.photoStoryAngle || `Face 0${index + 1}`}
                     </span>
-                    <span className="px-2 py-0.5 rounded bg-black/60 text-white font-mono text-xs">
+                    <span className="px-2.5 py-0.5 rounded-full bg-black/70 text-white font-mono text-xs">
                       0{index + 1} / 04
                     </span>
                   </div>
 
                   {/* Content Overlay */}
                   <div className="absolute bottom-0 inset-x-0 p-6 sm:p-8 z-10 space-y-3">
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-saffron font-semibold">
-                      Photographic Dispatch
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-saffron font-semibold flex items-center gap-1">
+                      <Eye className="w-3 h-3 text-saffron" /> Photographic Chronicle
                     </span>
                     <h3 className="font-serif text-xl sm:text-2xl md:text-3xl font-black text-white leading-tight line-clamp-2">
                       {face.title}
@@ -162,14 +162,16 @@ export function PhotoStoryCube({ faces }: PhotoStoryCubeProps) {
                     </p>
 
                     <div className="pt-3 border-t border-white/15 flex items-center justify-between">
-                      <span className="text-xs font-mono text-paper-400">
-                        Photo: {face.author.name}
+                      <span className="text-xs font-mono text-paper-400 flex items-center gap-1">
+                        <User className="w-3 h-3 text-saffron" />
+                        {face.author.name}
                       </span>
                       <Link
                         href={`/article/${face.slug}`}
                         className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-saffron text-warmblack font-mono text-xs font-bold uppercase tracking-wider hover:bg-saffron-400 transition-colors shadow-md"
                       >
-                        Explore Story <ArrowUpRight className="w-3.5 h-3.5" />
+                        <span>Explore</span>
+                        <ArrowUpRight className="w-3.5 h-3.5" />
                       </Link>
                     </div>
                   </div>
@@ -181,18 +183,19 @@ export function PhotoStoryCube({ faces }: PhotoStoryCubeProps) {
       </div>
 
       {/* Bottom Face Switcher Pills */}
-      <div className="max-w-xl mx-auto px-4 z-10 pb-6 w-full flex items-center justify-center gap-3">
+      <div className="max-w-xl mx-auto px-4 z-10 pb-6 w-full flex items-center justify-center gap-2.5">
         {items.map((face, index) => (
           <button
             key={face.id}
             onClick={() => handleFaceSelect(index)}
             className={cn(
-              "px-3 sm:px-4 py-2 rounded-xl text-xs font-mono uppercase tracking-wider transition-all duration-300 flex items-center gap-2",
+              "px-3.5 py-2 rounded-full text-xs font-mono uppercase tracking-wider transition-all duration-300 flex items-center gap-2",
               activeFace === index
                 ? "bg-saffron text-warmblack font-bold shadow-lg scale-105"
                 : "bg-warmblack-100 text-paper-400 hover:text-white border border-warmblack-50"
             )}
           >
+            <Camera className="w-3 h-3" />
             <span>0{index + 1}</span>
             <span className="hidden sm:inline text-[10px]">
               {index === 0 ? "Danakil" : index === 1 ? "Hardanger" : index === 2 ? "Kyoto" : "Atacama"}

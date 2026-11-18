@@ -4,9 +4,19 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowUpRight, RotateCw, Flame, BarChart3, Clock, Eye } from "lucide-react";
+import {
+  ArrowUpRight,
+  RotateCw,
+  Flame,
+  BarChart3,
+  Clock,
+  Eye,
+  User,
+  Share2,
+} from "lucide-react";
 import { Article } from "@/types/article";
 import { SafeImage } from "@/components/ui/SafeImage";
+import { CategoryIcon } from "@/components/ui/CategoryIcon";
 import { cn, formatTimeAgo } from "@/lib/utils";
 
 interface TrendingTop10Props {
@@ -73,8 +83,8 @@ export function TrendingTop10({ articles }: TrendingTop10Props) {
                 03 / TOP 10 DISPATCH RANKING
               </span>
               <span className="w-1.5 h-1.5 rounded-full bg-saffron" />
-              <span className="text-xs font-mono text-muted-foreground uppercase">
-                3D Double-Faced Flip Cards
+              <span className="text-xs font-mono text-muted-foreground uppercase flex items-center gap-1">
+                <RotateCw className="w-3 h-3 text-saffron" /> 3D Double-Faced Flip
               </span>
             </div>
             <h2 className="font-serif text-3xl sm:text-5xl font-black text-foreground tracking-tight">
@@ -108,18 +118,19 @@ export function TrendingTop10({ articles }: TrendingTop10Props) {
                 >
                   {/* FRONT FACE */}
                   <div className="absolute inset-0 backface-hidden rounded-3xl overflow-hidden bg-card border border-paper-300 dark:border-warmblack-100 shadow-md group-hover:border-saffron/60 flex flex-col justify-between p-5">
-                    {/* Top Row: Rank & Flip icon hint */}
+                    {/* Top Row: Rank & Flip icon button */}
                     <div className="flex items-center justify-between">
-                      <span className="font-serif font-black text-3xl text-saffron/80 group-hover:text-saffron transition-colors">
-                        {rankStr}
-                      </span>
+                      <div className="flex items-center gap-1 font-serif font-black text-3xl text-saffron/80 group-hover:text-saffron transition-colors">
+                        <Flame className="w-4 h-4 text-saffron" />
+                        <span>{rankStr}</span>
+                      </div>
                       <button
                         type="button"
                         onClick={(e) => {
                           e.stopPropagation();
                           toggleFlip(article.id);
                         }}
-                        className="p-1.5 rounded-full bg-paper-200 dark:bg-warmblack-200 text-muted-foreground hover:text-foreground transition-colors"
+                        className="p-2 rounded-full bg-paper-200 dark:bg-warmblack-200 text-muted-foreground hover:text-saffron transition-colors shadow-sm"
                         title="Flip to summary"
                         aria-label="Flip card for summary"
                       >
@@ -137,7 +148,8 @@ export function TrendingTop10({ articles }: TrendingTop10Props) {
                         sizes="250px"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
-                      <div className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-warmblack/80 backdrop-blur-sm text-[9px] font-mono text-saffron uppercase font-bold">
+                      <div className="absolute bottom-2 left-2 px-2.5 py-0.5 rounded-full bg-warmblack/85 backdrop-blur-sm text-[9px] font-mono text-saffron uppercase font-bold flex items-center gap-1 shadow-md">
+                        <CategoryIcon categorySlug={article.categorySlug} className="w-2.5 h-2.5" />
                         {article.category}
                       </div>
                     </div>
@@ -148,8 +160,14 @@ export function TrendingTop10({ articles }: TrendingTop10Props) {
                         {article.title}
                       </h4>
                       <div className="flex items-center justify-between text-[10px] font-mono text-muted-foreground mt-3 pt-2 border-t border-paper-200 dark:border-warmblack-200">
-                        <span>{formatTimeAgo(article.publishedAt)}</span>
-                        <span className="text-saffron group-hover:underline">Flip &rarr;</span>
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3 h-3 text-saffron" />
+                          {formatTimeAgo(article.publishedAt)}
+                        </span>
+                        <span className="text-saffron flex items-center gap-1 group-hover:translate-x-0.5 transition-transform font-bold">
+                          <span>Flip</span>
+                          <RotateCw className="w-2.5 h-2.5" />
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -161,8 +179,8 @@ export function TrendingTop10({ articles }: TrendingTop10Props) {
                   >
                     <div>
                       <div className="flex items-center justify-between pb-2 border-b border-warmblack-100">
-                        <span className="text-[10px] font-mono text-saffron uppercase tracking-widest font-bold">
-                          DOSSIER #{rankStr}
+                        <span className="text-[10px] font-mono text-saffron uppercase tracking-widest font-bold flex items-center gap-1">
+                          <Flame className="w-3 h-3" /> DOSSIER #{rankStr}
                         </span>
                         <button
                           type="button"
@@ -177,35 +195,40 @@ export function TrendingTop10({ articles }: TrendingTop10Props) {
                         </button>
                       </div>
 
-                      <div className="mt-3 space-y-2">
-                        <div className="text-[10px] font-mono text-saffron uppercase tracking-wider">
-                          Executive Briefing
+                      <div className="mt-3 space-y-1.5">
+                        <div className="text-[10px] font-mono text-saffron uppercase tracking-wider flex items-center gap-1">
+                          <BarChart3 className="w-3 h-3" /> Executive Briefing
                         </div>
                         <p className="font-sans text-xs text-paper-200 line-clamp-4 leading-relaxed">
                           {article.excerpt}
                         </p>
                       </div>
 
-                      {/* Author & Stats */}
+                      {/* Author & Stats with icons */}
                       <div className="mt-4 pt-3 border-t border-warmblack-100 space-y-1.5 text-[11px] font-mono text-paper-400">
                         <div className="flex items-center justify-between">
-                          <span>Dispatch Lead:</span>
+                          <span className="flex items-center gap-1">
+                            <User className="w-3 h-3 text-saffron" /> Lead:
+                          </span>
                           <span className="text-paper-100 font-semibold">{article.author.name}</span>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span>Read Duration:</span>
-                          <span className="text-saffron">{article.readTimeMinutes} min</span>
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3 h-3 text-saffron" /> Read:
+                          </span>
+                          <span className="text-saffron">{article.readTimeMinutes}m</span>
                         </div>
                       </div>
                     </div>
 
-                    {/* Direct Link button */}
+                    {/* Direct Link button with ArrowUpRight */}
                     <Link
                       href={`/article/${article.slug}`}
                       onClick={(e) => e.stopPropagation()}
                       className="w-full py-2.5 rounded-xl bg-saffron text-warmblack font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 hover:bg-saffron-400 transition-colors shadow-md"
                     >
-                      Read Full Article <ArrowUpRight className="w-3.5 h-3.5" />
+                      <span>Read Full Article</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
                     </Link>
                   </div>
                 </div>

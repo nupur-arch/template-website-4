@@ -4,9 +4,18 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowUpRight, Award, Bookmark, Clock, UserCheck } from "lucide-react";
+import {
+  ArrowUpRight,
+  Award,
+  Bookmark,
+  Clock,
+  UserCheck,
+  User,
+  Sparkles,
+} from "lucide-react";
 import { Article } from "@/types/article";
 import { SafeImage } from "@/components/ui/SafeImage";
+import { CategoryIcon } from "@/components/ui/CategoryIcon";
 import { formatTimeAgo } from "@/lib/utils";
 
 interface EditorsPicksStackProps {
@@ -26,7 +35,6 @@ export function EditorsPicksStack({ articles }: EditorsPicksStackProps) {
       const cards = cardsRef.current.filter(Boolean) as HTMLDivElement[];
 
       cards.forEach((card, index) => {
-        // Skip animating the last card as it sits at the top of the completed stack
         if (index === cards.length - 1) return;
 
         ScrollTrigger.create({
@@ -39,7 +47,6 @@ export function EditorsPicksStack({ articles }: EditorsPicksStackProps) {
           scrub: true,
           onUpdate: (self) => {
             const p = self.progress;
-            // Tilt back with rotateX and scale down as subsequent cards stack over
             const rotateX = -12 * p;
             const scale = 1 - 0.05 * p;
             const opacity = 1 - 0.25 * p;
@@ -73,8 +80,8 @@ export function EditorsPicksStack({ articles }: EditorsPicksStackProps) {
                 04 / CURATED PORTFOLIO
               </span>
               <span className="w-1.5 h-1.5 rounded-full bg-saffron" />
-              <span className="text-xs font-mono text-muted-foreground uppercase">
-                Sticky 3D Stacked Folios
+              <span className="text-xs font-mono text-muted-foreground uppercase flex items-center gap-1">
+                <Bookmark className="w-3 h-3 text-saffron" /> Sticky 3D Folios
               </span>
             </div>
             <h2 className="font-serif text-3xl sm:text-5xl font-black text-foreground tracking-tight">
@@ -108,10 +115,12 @@ export function EditorsPicksStack({ articles }: EditorsPicksStackProps) {
                       0{index + 1}
                     </span>
                     <span className="h-4 w-[1px] bg-paper-300 dark:bg-warmblack-100" />
-                    <span className="text-xs font-mono uppercase tracking-widest text-saffron font-semibold px-2.5 py-0.5 rounded-full bg-saffron/10 border border-saffron/20">
+                    <span className="text-xs font-mono uppercase tracking-widest text-saffron font-semibold px-2.5 py-0.5 rounded-full bg-saffron/10 border border-saffron/20 flex items-center gap-1.5">
+                      <CategoryIcon categorySlug={article.categorySlug} className="w-3 h-3" />
                       {article.category}
                     </span>
-                    <span className="text-xs font-mono text-muted-foreground">
+                    <span className="text-xs font-mono text-muted-foreground flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-saffron" />
                       Folio No. {article.readTimeMinutes}0{index + 1}
                     </span>
                   </div>
@@ -139,7 +148,8 @@ export function EditorsPicksStack({ articles }: EditorsPicksStackProps) {
                         )}
                       </div>
                       <div>
-                        <div className="text-xs font-serif font-bold text-foreground">
+                        <div className="text-xs font-serif font-bold text-foreground flex items-center gap-1">
+                          <User className="w-3 h-3 text-saffron" />
                           {article.author.name}
                         </div>
                         <div className="text-[10px] font-mono text-muted-foreground">
@@ -152,7 +162,8 @@ export function EditorsPicksStack({ articles }: EditorsPicksStackProps) {
                       href={`/article/${article.slug}`}
                       className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-warmblack dark:bg-saffron text-paper-50 dark:text-warmblack font-mono text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity shadow-md"
                     >
-                      Read Full Folio <ArrowUpRight className="w-4 h-4" />
+                      <span>Read Folio</span>
+                      <ArrowUpRight className="w-4 h-4" />
                     </Link>
                   </div>
                 </div>
@@ -168,8 +179,9 @@ export function EditorsPicksStack({ articles }: EditorsPicksStackProps) {
                       sizes="(max-width: 1024px) 100vw, 450px"
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-warmblack/80 backdrop-blur-md text-[10px] font-mono text-white">
-                      {article.readTimeMinutes} min reading folio
+                    <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-warmblack/80 backdrop-blur-md text-[10px] font-mono text-white flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-saffron" />
+                      {article.readTimeMinutes}m folio
                     </div>
                   </div>
                 </div>
