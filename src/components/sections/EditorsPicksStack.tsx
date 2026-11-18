@@ -1,192 +1,200 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import Link from "next/link";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useScroll, useTransform, useReducedMotion, motion } from "framer-motion";
 import {
   ArrowUpRight,
   Award,
-  Bookmark,
   Clock,
-  UserCheck,
   User,
   Sparkles,
 } from "lucide-react";
 import { Article } from "@/types/article";
 import { SafeImage } from "@/components/ui/SafeImage";
 import { CategoryIcon } from "@/components/ui/CategoryIcon";
-import { formatTimeAgo } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 
-interface EditorsPicksStackProps {
+interface EditorsPicksProps {
   articles: Article[];
 }
 
-export function EditorsPicksStack({ articles }: EditorsPicksStackProps) {
+interface PickCardProps {
+  article: Article;
+  index: number;
+  total: number;
+  progress: any;
+}
+
+function PickCard({ article, index, total, progress }: PickCardProps) {
+  const isReduced = useReducedMotion();
+  const rangeStart = index / Math.max(1, total);
+  const rangeEnd = Math.min(1, (index + 1) / Math.max(1, total));
+
+  // Scale down card slightly as the next one stacks over (last card stays 1)
+  const scale = useTransform(
+    progress,
+    [rangeStart, rangeEnd],
+    [1, index === total - 1 ? 1 : 0.94]
+  );
+
+  // Dim overlay as the next card scrolls in
+  const dimOpacity = useTransform(
+    progress,
+    [rangeStart, rangeEnd],
+    [0, index !== total - 1 ? 0.38 : 0]
+  );
+
+  const isToneSaffron = index % 2 === 0;
+
+  return (
+    <div
+      className="pick-pin sticky top-[72px] sm:top-[84px] mb-8 sm:mb-12 h-[520px] sm:h-[480px] lg:h-[520px] will-change-transform"
+      style={{
+        zIndex: index + 10,
+      }}
+    >
+      <motion.article
+        style={{
+          scale: isReduced ? 1 : scale,
+          transformOrigin: "50% 0",
+        }}
+        className={`pick-card relative grid grid-cols-1 lg:grid-cols-2 h-full rounded-3xl sm:rounded-4xl overflow-hidden border shadow-2xl transition-shadow ${
+          isToneSaffron
+            ? "bg-saffron text-warmblack border-saffron-600 shadow-saffron/20"
+            : "bg-card text-foreground border-paper-300 dark:border-warmblack-100"
+        }`}
+      >
+        {/* Left: Editorial Copy */}
+        <div className="pick-copy flex flex-col justify-between p-6 sm:p-8 lg:p-10 z-10">
+          {/* Eyebrow Header */}
+          <div className="flex items-center justify-between w-full text-xs font-mono tracking-widest uppercase opacity-75">
+            <span className="flex items-center gap-1.5 font-bold">
+              <Award className="w-3.5 h-3.5" /> THE EDITOR’S PICK
+            </span>
+            <span className="font-bold">/{String(index + 1).padStart(2, "0")}</span>
+          </div>
+
+          {/* Middle Story Block */}
+          <div className="my-auto py-4 space-y-3">
+            <div className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider font-semibold opacity-85">
+              <CategoryIcon categorySlug={article.categorySlug} className="w-3.5 h-3.5" />
+              <span>{article.category}</span>
+              <span>/</span>
+              <span>Dispatch #{String(index + 1).padStart(2, "0")}</span>
+            </div>
+
+            <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-black leading-[1.08] tracking-tight line-clamp-3">
+              {article.title}
+            </h3>
+
+            <p className="text-xs sm:text-sm font-sans opacity-80 leading-relaxed line-clamp-3 max-w-md">
+              {article.excerpt}
+            </p>
+          </div>
+
+          {/* Bottom Meta & Action */}
+          <div className="flex items-center justify-between pt-4 border-t border-current/15 mt-auto">
+            <div className="text-xs font-mono leading-tight opacity-80 space-y-0.5">
+              <span className="flex items-center gap-1 font-bold">
+                <User className="w-3.5 h-3.5" />
+                {article.author.name}
+              </span>
+              <span className="flex items-center gap-1 text-[11px] opacity-75">
+                <Clock className="w-3 h-3" />
+                {article.readTimeMinutes}m • {formatDate(article.publishedAt)}
+              </span>
+            </div>
+
+            {/* Circular Rotating Arrow Button */}
+            <Link
+              href={`/article/${article.slug}`}
+              className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all duration-300 hover:rotate-45 hover:scale-110 shrink-0 ${
+                isToneSaffron
+                  ? "border-warmblack text-warmblack hover:bg-warmblack hover:text-saffron"
+                  : "border-saffron text-saffron hover:bg-saffron hover:text-warmblack"
+              }`}
+              aria-label={`Read editor's pick: ${article.title}`}
+              title="Read Full Story"
+            >
+              <ArrowUpRight className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+
+        {/* Right: Full-Bleed Photo with Caption */}
+        <div className="pick-photo relative h-full min-h-[220px] lg:min-h-full overflow-hidden bg-paper-200 dark:bg-warmblack-900">
+          <SafeImage
+            src={article.coverImage}
+            alt={article.title}
+            category={article.category}
+            fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="object-cover"
+          />
+
+          {/* Floating Caption Badge */}
+          <div className="absolute bottom-4 right-4 z-20 px-3.5 py-1.5 rounded-full bg-warmblack/85 backdrop-blur-md text-white font-mono text-[11px] tracking-wider flex items-center gap-1.5 shadow-lg">
+            <Sparkles className="w-3 h-3 text-saffron" />
+            <span>A WIDER VIEW / 0{index + 1}</span>
+          </div>
+        </div>
+
+        {/* Dimming Layer on Scroll */}
+        <motion.div
+          className="pick-dim absolute inset-0 bg-black pointer-events-none rounded-3xl sm:rounded-4xl z-30"
+          style={{ opacity: isReduced ? 0 : dimOpacity }}
+          aria-hidden="true"
+        />
+      </motion.article>
+    </div>
+  );
+}
+
+export function EditorsPicksStack({ articles }: EditorsPicksProps) {
   const items = articles.slice(0, 4);
   const containerRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  useEffect(() => {
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReduced) return;
-
-    const ctx = gsap.context(() => {
-      const cards = cardsRef.current.filter(Boolean) as HTMLDivElement[];
-
-      cards.forEach((card, index) => {
-        if (index === cards.length - 1) return;
-
-        ScrollTrigger.create({
-          trigger: card,
-          start: "top top+=100",
-          endTrigger: containerRef.current,
-          end: "bottom bottom",
-          pin: true,
-          pinSpacing: false,
-          scrub: true,
-          onUpdate: (self) => {
-            const p = self.progress;
-            const rotateX = -12 * p;
-            const scale = 1 - 0.05 * p;
-            const opacity = 1 - 0.25 * p;
-            gsap.set(card, {
-              rotateX,
-              scale,
-              opacity,
-              transformOrigin: "center top",
-            });
-          },
-        });
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, [items]);
+  // Track scroll through the deck container
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
 
   return (
     <section
-      ref={containerRef}
       id="editors-picks"
-      className="relative py-24 sm:py-32 bg-background border-b border-paper-300 dark:border-warmblack-100"
+      className="editors-section relative py-20 sm:py-28 bg-background border-b border-paper-300 dark:border-warmblack-100"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-16 pb-6 border-b border-paper-300 dark:border-warmblack-100">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-saffron font-bold flex items-center gap-1.5">
-                <Award className="w-3.5 h-3.5 text-saffron" />
-                04 / CURATED PORTFOLIO
-              </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-saffron" />
-              <span className="text-xs font-mono text-muted-foreground uppercase flex items-center gap-1">
-                <Bookmark className="w-3 h-3 text-saffron" /> Sticky 3D Folios
-              </span>
-            </div>
-            <h2 className="font-serif text-3xl sm:text-5xl font-black text-foreground tracking-tight">
-              Editor&apos;s Long View
-            </h2>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        {/* Section Heading: Good stories deserve a little more time. */}
+        <div className="desk-heading mb-12 sm:mb-16 pb-6 border-b border-paper-300 dark:border-warmblack-100">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-saffron font-bold flex items-center gap-1.5">
+              <Award className="w-3.5 h-3.5 text-saffron" />
+              04 / SELECTED BY THE EDITORS
+            </span>
           </div>
-          <p className="text-sm font-sans text-muted-foreground max-w-md">
-            Rigorous philosophical theses and investigative dossiers hand-selected by the Editor-in-Chief. As you scroll, previous folios tilt back into an archival stack.
+
+          <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl font-black text-foreground tracking-tight leading-[1.08] max-w-2xl">
+            Good stories deserve a little more time.
+          </h2>
+          <p className="font-sans text-sm sm:text-base text-muted-foreground mt-3 flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-saffron shrink-0" />
+            Pause here. There’s more to the story.
           </p>
         </div>
 
-        {/* Stack Container */}
-        <div className="relative space-y-12 sm:space-y-16 perspective-deep">
-          {items.map((article, index) => (
-            <div
+        {/* The Card Deck with Framer Motion Stacking */}
+        <div ref={containerRef} className="pick-deck relative pb-12">
+          {items.map((article, idx) => (
+            <PickCard
               key={article.id}
-              ref={(el) => {
-                cardsRef.current[index] = el;
-              }}
-              style={{
-                top: `${100 + index * 20}px`,
-                transformStyle: "preserve-3d",
-              }}
-              className="sticky rounded-4xl bg-card border border-paper-300 dark:border-warmblack-100 shadow-2xl p-6 sm:p-10 will-change-transform transition-shadow duration-300 group hover:border-saffron/50"
-            >
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                {/* Left Text Column */}
-                <div className="lg:col-span-7 space-y-5">
-                  <div className="flex items-center gap-3">
-                    <span className="font-serif font-black text-4xl text-saffron">
-                      0{index + 1}
-                    </span>
-                    <span className="h-4 w-[1px] bg-paper-300 dark:bg-warmblack-100" />
-                    <span className="text-xs font-mono uppercase tracking-widest text-saffron font-semibold px-2.5 py-0.5 rounded-full bg-saffron/10 border border-saffron/20 flex items-center gap-1.5">
-                      <CategoryIcon categorySlug={article.categorySlug} className="w-3 h-3" />
-                      {article.category}
-                    </span>
-                    <span className="text-xs font-mono text-muted-foreground flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-saffron" />
-                      Folio No. {article.readTimeMinutes}0{index + 1}
-                    </span>
-                  </div>
-
-                  <h3 className="font-serif text-2xl sm:text-4xl font-black text-foreground group-hover:text-saffron transition-colors leading-tight">
-                    <Link href={`/article/${article.slug}`}>{article.title}</Link>
-                  </h3>
-
-                  <p className="font-sans text-sm sm:text-base text-muted-foreground leading-relaxed line-clamp-3">
-                    {article.excerpt}
-                  </p>
-
-                  <div className="pt-4 border-t border-paper-200 dark:border-warmblack-200 flex flex-wrap items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full overflow-hidden bg-paper-300 dark:bg-warmblack-100 relative shrink-0">
-                        {article.author.avatar ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={article.author.avatar}
-                            alt={article.author.name}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <UserCheck className="w-5 h-5 m-auto text-saffron" />
-                        )}
-                      </div>
-                      <div>
-                        <div className="text-xs font-serif font-bold text-foreground flex items-center gap-1">
-                          <User className="w-3 h-3 text-saffron" />
-                          {article.author.name}
-                        </div>
-                        <div className="text-[10px] font-mono text-muted-foreground">
-                          {article.author.title}
-                        </div>
-                      </div>
-                    </div>
-
-                    <Link
-                      href={`/article/${article.slug}`}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-warmblack dark:bg-saffron text-paper-50 dark:text-warmblack font-mono text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity shadow-md"
-                    >
-                      <span>Read Folio</span>
-                      <ArrowUpRight className="w-4 h-4" />
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Right Image Column */}
-                <div className="lg:col-span-5">
-                  <div className="relative aspect-[4/3] rounded-3xl overflow-hidden border border-paper-200 dark:border-warmblack-200 shadow-inner">
-                    <SafeImage
-                      src={article.coverImage}
-                      alt={article.title}
-                      category={article.category}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 450px"
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-warmblack/80 backdrop-blur-md text-[10px] font-mono text-white flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-saffron" />
-                      {article.readTimeMinutes}m folio
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+              article={article}
+              index={idx}
+              total={items.length}
+              progress={scrollYProgress}
+            />
           ))}
         </div>
       </div>

@@ -9,16 +9,12 @@ import {
   ChevronLeft,
   ChevronRight,
   Layers,
-  Sparkles,
   Flame,
   Clock,
   User,
-  Bookmark,
-  Compass,
 } from "lucide-react";
 import { Article } from "@/types/article";
 import { SafeImage } from "@/components/ui/SafeImage";
-import { SignatureStamp } from "@/components/brand/SignatureStamp";
 import { CategoryIcon } from "@/components/ui/CategoryIcon";
 import { useSmoothScroll } from "@/components/providers/SmoothScrollProvider";
 import { cn } from "@/lib/utils";
@@ -69,15 +65,13 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
           return;
         }
 
-        // Active center card vs side cards
-        const isCenter = absOffset < 0.5;
-        // Non-linear horizontal spacing so side cards peek with clean separation
         const sign = Math.sign(offset);
-        const x = sign * (Math.pow(absOffset, 0.85) * 290);
-        const z = -Math.min(absOffset * 180, 480);
-        const rotateY = -sign * Math.min(absOffset * 38, 55);
-        const scale = Math.max(0.74, 1 - absOffset * 0.08);
-        const opacity = Math.max(0.18, 1 - absOffset * 0.28);
+        // Non-linear horizontal spacing so side cards peek with clean separation
+        const x = sign * (Math.pow(absOffset, 0.85) * 310);
+        const z = -Math.min(absOffset * 190, 500);
+        const rotateY = -sign * Math.min(absOffset * 40, 55);
+        const scale = Math.max(0.72, 1 - absOffset * 0.08);
+        const opacity = Math.max(0.15, 1 - absOffset * 0.28);
         const zIndex = 60 - Math.round(absOffset * 10);
 
         gsap.set(card, {
@@ -120,7 +114,6 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
         },
       });
 
-      // Refresh ScrollTrigger to ensure accurate layout
       ScrollTrigger.refresh();
 
       return () => {
@@ -155,56 +148,28 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
       id="hero"
       className={cn(
         "relative w-full bg-background border-b border-paper-300 dark:border-warmblack-100",
-        isReducedMotion ? "py-24" : "h-[380vh]" // 380vh runway ensures smooth scrolling and perfect holding
+        isReducedMotion ? "py-20" : "h-[380vh]" // 380vh runway ensures smooth scrolling and perfect holding
       )}
     >
-      {/* Pinned Sticky Viewport: perfectly locked in place while scrolling */}
+      {/* Pinned Sticky Viewport: elevated into the marked position in ss-3 */}
       <div
         ref={pinStageRef}
         className={cn(
-          "w-full overflow-hidden flex flex-col justify-between items-center select-none",
-          isReducedMotion ? "relative" : "sticky top-0 h-screen pt-20 sm:pt-24 pb-8"
+          "w-full overflow-hidden flex flex-col justify-center items-center select-none",
+          isReducedMotion ? "relative" : "sticky top-0 h-screen pt-14 pb-8"
         )}
       >
         {/* Subtle Ambient Background Grain */}
         <div className="absolute inset-0 pointer-events-none opacity-[0.035] dark:opacity-[0.06] bg-[radial-gradient(#FFB000_1px,transparent_1px)] [background-size:24px_24px]" />
 
-        {/* Top Header Label & Signature Stamp */}
-        <div className="relative z-10 w-full max-w-7xl px-4 sm:px-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-widest bg-saffron/15 text-saffron border border-saffron/30 font-bold shadow-sm">
-              <Sparkles className="w-3 h-3 text-saffron" />
-              01 / HERO 3D COVERFLOW
-            </span>
-            <span className="hidden sm:inline-flex items-center gap-1 text-xs font-mono text-muted-foreground uppercase tracking-widest">
-              <Layers className="w-3.5 h-3.5 text-saffron" /> 20 Stories Stream
-            </span>
-          </div>
-
-          {/* Signature Stamp Motif */}
-          <div className="hidden sm:block">
-            <SignatureStamp size={80} text="LIVE • 20 STORIES • SAFFRON PRESS • " centerText="01/20" />
-          </div>
-        </div>
-
-        {/* Center Title */}
-        <div className="relative z-10 text-center max-w-2xl px-4 my-2 pointer-events-none">
-          <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-saffron font-bold flex items-center justify-center gap-1.5">
-            <Flame className="w-3.5 h-3.5 text-saffron" /> THE MONUMENTAL ARCHIVE
-          </span>
-          <h1 className="font-serif text-2xl sm:text-4xl md:text-5xl font-black tracking-tight text-foreground leading-[1.08] mt-1">
-            Frontline Chronicles <span className="italic font-normal text-saffron">in Pure 3D</span>
-          </h1>
-        </div>
-
-        {/* Main 3D Coverflow Stage */}
+        {/* 3D Coverflow Stage — Elevated directly to the primary visible viewport zone */}
         {!isReducedMotion ? (
-          <div className="relative w-full flex-1 max-h-[500px] flex items-center justify-center">
+          <div className="relative w-full flex-1 flex items-center justify-center">
             {/* Left Nav Pill Button */}
             <button
               onClick={() => navigateToCard(currentIndex - 1)}
               disabled={currentIndex === 0}
-              className="absolute left-4 sm:left-12 z-40 p-3 rounded-full bg-warmblack/80 hover:bg-saffron text-white hover:text-warmblack border border-white/10 backdrop-blur-md shadow-2xl transition-all disabled:opacity-20 disabled:pointer-events-none hover:scale-110 active:scale-95"
+              className="absolute left-3 sm:left-10 z-40 p-3 rounded-full bg-warmblack/80 hover:bg-saffron text-white hover:text-warmblack border border-white/10 backdrop-blur-md shadow-2xl transition-all disabled:opacity-20 disabled:pointer-events-none hover:scale-110 active:scale-95"
               aria-label="Previous story"
             >
               <ChevronLeft className="w-5 h-5" />
@@ -214,16 +179,16 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
             <button
               onClick={() => navigateToCard(currentIndex + 1)}
               disabled={currentIndex === items.length - 1}
-              className="absolute right-4 sm:right-12 z-40 p-3 rounded-full bg-warmblack/80 hover:bg-saffron text-white hover:text-warmblack border border-white/10 backdrop-blur-md shadow-2xl transition-all disabled:opacity-20 disabled:pointer-events-none hover:scale-110 active:scale-95"
+              className="absolute right-3 sm:right-10 z-40 p-3 rounded-full bg-warmblack/80 hover:bg-saffron text-white hover:text-warmblack border border-white/10 backdrop-blur-md shadow-2xl transition-all disabled:opacity-20 disabled:pointer-events-none hover:scale-110 active:scale-95"
               aria-label="Next story"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
 
-            {/* 3D Track Container */}
+            {/* 3D Track Container: Card dimensions optimized to prevent any bottom clipping */}
             <div
               ref={trackRef}
-              className="perspective-deep relative w-full max-w-5xl h-[340px] sm:h-[400px] md:h-[440px] flex items-center justify-center"
+              className="perspective-deep relative w-full max-w-6xl h-[420px] sm:h-[480px] md:h-[500px] flex items-center justify-center"
               style={{ transformStyle: "preserve-3d" }}
             >
               {items.map((article, idx) => {
@@ -239,8 +204,8 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
                       if (!isSelected) navigateToCard(idx);
                     }}
                     className={cn(
-                      "absolute w-[290px] sm:w-[360px] md:w-[410px] h-[340px] sm:h-[390px] md:h-[430px] rounded-3xl preserve-3d will-change-transform cursor-pointer transition-shadow duration-300",
-                      isSelected && "shadow-[0_25px_60px_-15px_rgba(255,176,0,0.3)]"
+                      "absolute w-[300px] sm:w-[380px] md:w-[430px] h-[390px] sm:h-[450px] md:h-[480px] rounded-3xl preserve-3d will-change-transform cursor-pointer transition-shadow duration-300",
+                      isSelected && "shadow-[0_25px_60px_-15px_rgba(255,176,0,0.35)]"
                     )}
                     style={{
                       transformOrigin: "50% 50% -120px",
@@ -248,16 +213,16 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
                   >
                     <Link
                       href={`/article/${article.slug}`}
-                      className="block w-full h-full rounded-3xl overflow-hidden bg-card border border-paper-300 dark:border-warmblack-100 shadow-xl group hover:border-saffron/70 relative focus:outline-none focus-visible:ring-2 focus-visible:ring-saffron coverflow-reflection"
+                      className="block w-full h-full rounded-3xl overflow-hidden bg-card border border-paper-300 dark:border-warmblack-100 shadow-2xl group hover:border-saffron/70 relative focus:outline-none focus-visible:ring-2 focus-visible:ring-saffron coverflow-reflection"
                     >
                       {/* Cover Photo */}
-                      <div className="relative w-full h-[52%] sm:h-[56%] overflow-hidden bg-paper-200 dark:bg-warmblack-900">
+                      <div className="relative w-full h-[54%] overflow-hidden bg-paper-200 dark:bg-warmblack-900">
                         <SafeImage
                           src={article.coverImage}
                           alt={article.title}
                           category={article.category}
                           fill
-                          sizes="(max-width: 768px) 360px, 440px"
+                          sizes="(max-width: 768px) 380px, 450px"
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         />
 
@@ -275,7 +240,7 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
                       </div>
 
                       {/* Content Body */}
-                      <div className="p-4 sm:p-5 flex flex-col justify-between h-[48%] sm:h-[44%] bg-card text-card-foreground">
+                      <div className="p-4 sm:p-5 flex flex-col justify-between h-[46%] bg-card text-card-foreground">
                         <div>
                           {/* Metadata Icons Row */}
                           <div className="flex items-center gap-3 text-[10px] font-mono text-muted-foreground mb-1.5">
@@ -290,7 +255,7 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
                             </span>
                           </div>
 
-                          <h2 className="font-serif font-bold text-sm sm:text-base md:text-lg line-clamp-2 text-foreground group-hover:text-saffron transition-colors leading-snug">
+                          <h2 className="font-serif font-bold text-base sm:text-lg md:text-xl line-clamp-2 text-foreground group-hover:text-saffron transition-colors leading-snug">
                             {article.title}
                           </h2>
                         </div>
@@ -300,11 +265,8 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
                           <span className="text-[10px] font-mono text-muted-foreground truncate max-w-[70%]">
                             #{article.tags[0] || "Dispatch"}
                           </span>
-                          <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-saffron group-hover:translate-x-0.5 transition-transform">
-                            <span>Read</span>
-                            <div className="w-6 h-6 rounded-full bg-saffron/20 flex items-center justify-center text-saffron">
-                              <ArrowUpRight className="w-3.5 h-3.5" />
-                            </div>
+                          <div className="w-7 h-7 rounded-full bg-saffron/15 group-hover:bg-saffron text-saffron group-hover:text-warmblack flex items-center justify-center transition-colors shadow-sm">
+                            <ArrowUpRight className="w-4 h-4" />
                           </div>
                         </div>
                       </div>
@@ -348,10 +310,10 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
         )}
 
         {/* Bottom Pinterest-Style Scrubber & Counter Pill */}
-        <div className="relative z-10 w-full max-w-xl px-4">
-          <div className="bg-[#18130F]/90 dark:bg-[#120E0A]/90 backdrop-blur-xl rounded-full border border-white/10 dark:border-saffron/30 p-2.5 shadow-2xl flex items-center gap-4 text-paper-50">
+        <div className="relative z-20 w-full max-w-md px-4 mt-2">
+          <div className="bg-[#15110D]/90 dark:bg-[#120E0A]/90 backdrop-blur-xl rounded-full border border-white/10 dark:border-saffron/30 px-3 py-2 shadow-2xl flex items-center gap-3 text-paper-50">
             {/* Number Pill */}
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 font-mono font-bold text-xs">
+            <div className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/10 font-mono font-bold text-xs">
               <span className="text-saffron text-sm">{activeNumber}</span>
               <span className="text-paper-400">/</span>
               <span className="text-paper-400">{totalNumber}</span>
@@ -377,9 +339,9 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
             </div>
 
             {/* Scroll Indicator with Layers Icon */}
-            <div className="hidden sm:flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-wider text-saffron pr-2">
+            <div className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider text-saffron pr-1">
               <Layers className="w-3.5 h-3.5 text-saffron animate-pulse" />
-              <span>Scroll down</span>
+              <span className="hidden sm:inline">Scroll</span>
             </div>
           </div>
         </div>
