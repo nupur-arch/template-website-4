@@ -1,0 +1,128 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #FBF9F5;
+    --foreground: #15110D;
+    --card: #FFFFFF;
+    --card-foreground: #15110D;
+    --popover: #FFFFFF;
+    --popover-foreground: #15110D;
+    --primary: #15110D;
+    --primary-foreground: #FBF9F5;
+    --secondary: #F0ECE3;
+    --secondary-foreground: #15110D;
+    --muted: #EFECE6;
+    --muted-foreground: #6A6359;
+    --accent: #FFB000;
+    --accent-foreground: #15110D;
+    --border: #E5DFD3;
+    --input: #E5DFD3;
+    --ring: #FFB000;
+  }
+
+  .dark {
+    --background: #15110D;
+    --foreground: #F5F2EB;
+    --card: #1D1813;
+    --card-foreground: #F5F2EB;
+    --popover: #1D1813;
+    --popover-foreground: #F5F2EB;
+    --primary: #FFB000;
+    --primary-foreground: #15110D;
+    --secondary: #241D17;
+    --secondary-foreground: #F5F2EB;
+    --muted: #241E18;
+    --muted-foreground: #9E9588;
+    --accent: #FFB000;
+    --accent-foreground: #15110D;
+    --border: #2C241D;
+    --input: #2C241D;
+    --ring: #FFB000;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    overflow-x: hidden;
+  }
+
+  /* Focus visible accessibility outline */
+  :focus-visible {
+    outline: 2px solid #FFB000;
+    outline-offset: 2px;
+  }
+}
+
+/* 3D Perspective Containers */
+.perspective-container {
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+.perspective-deep {
+  perspective: 2000px;
+  perspective-origin: 50% 50%;
+  transform-style: preserve-3d;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* 3D Coverflow Card Reflection */
+.coverflow-reflection {
+  -webkit-box-reflect: below 12px linear-gradient(to bottom, transparent 65%, rgba(0, 0, 0, 0.28));
+}
+
+.dark .coverflow-reflection {
+  -webkit-box-reflect: below 12px linear-gradient(to bottom, transparent 55%, rgba(255, 176, 0, 0.18));
+}
+
+/* Editorial Thin Rules */
+.thin-rule {
+  border-top-width: 1px;
+  border-style: solid;
+}
+
+.thin-rule-b {
+  border-bottom-width: 1px;
+  border-style: solid;
+}
+
+/* No scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Text drum cylinder animation paused on hover */
+@media (hover: hover) {
+  .hover-pause:hover {
+    animation-play-state: paused !important;
+  }
+}
