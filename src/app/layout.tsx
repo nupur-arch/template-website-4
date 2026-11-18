@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 import { siteConfig } from "@/content/site.config";
 
 const serifFont = Playfair_Display({
@@ -68,6 +69,7 @@ export default function RootLayout({
             <main id="main-content" className="relative">
               {children}
             </main>
+            <Footer />
           </SmoothScrollProvider>
         </ThemeProvider>
       </body>
