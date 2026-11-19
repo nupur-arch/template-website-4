@@ -1,18 +1,15 @@
 "use client";
 
 import {
-  Globe,
-  Cpu,
-  Coins,
-  Palette,
-  Leaf,
-  Feather,
-  Fingerprint,
-  Shield,
+  Activity,
+  Dumbbell,
+  Shirt,
   Compass,
+  Users,
+  HeartPulse,
   Flame,
-  Radio,
-  BookOpen,
+  Zap,
+  Sparkles,
   LucideIcon,
 } from "lucide-react";
 
@@ -25,31 +22,22 @@ interface CategoryIconProps {
 export function getCategoryIcon(slugOrName?: string): LucideIcon {
   const normalized = (slugOrName || "").toLowerCase().replace(/[^a-z]/g, "");
 
-  if (normalized.includes("tech") || normalized.includes("silicon") || normalized.includes("compute")) {
-    return Cpu;
+  if (normalized.includes("atividade") || normalized.includes("academia") || normalized.includes("casa")) {
+    return Dumbbell;
   }
-  if (normalized.includes("market") || normalized.includes("capital") || normalized.includes("econom")) {
-    return Coins;
+  if (normalized.includes("equipamento") || normalized.includes("vestuario") || normalized.includes("acessorio")) {
+    return Shirt;
   }
-  if (normalized.includes("culture") || normalized.includes("art") || normalized.includes("architect")) {
-    return Palette;
-  }
-  if (normalized.includes("climate") || normalized.includes("planet") || normalized.includes("earth")) {
-    return Leaf;
-  }
-  if (normalized.includes("longview") || normalized.includes("opinion") || normalized.includes("essay")) {
-    return Feather;
-  }
-  if (normalized.includes("investigat") || normalized.includes("dossier")) {
-    return Fingerprint;
-  }
-  if (normalized.includes("geopolitic") || normalized.includes("defens") || normalized.includes("sovereign")) {
-    return Shield;
-  }
-  if (normalized.includes("photo") || normalized.includes("visual")) {
+  if (normalized.includes("iniciacao") || normalized.includes("planejamento") || normalized.includes("orientacao")) {
     return Compass;
   }
-  return Globe;
+  if (normalized.includes("servico") || normalized.includes("profissional")) {
+    return Users;
+  }
+  if (normalized.includes("habito") || normalized.includes("continuidade") || normalized.includes("seguranca")) {
+    return HeartPulse;
+  }
+  return Activity;
 }
 
 export function CategoryIcon({

@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { AlertCircle, ChevronUp, ChevronDown, Flame, Radio } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ChevronUp, ChevronDown, Radio } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface BreakingBarProps {
@@ -10,16 +9,18 @@ interface BreakingBarProps {
 }
 
 export function BreakingBar({ headlines }: BreakingBarProps) {
-  const items = headlines.length > 0 ? headlines : [
-    "GLOBAL DISPATCH: Strait of Malacca quantum radar corridor becomes fully operational.",
-    "DEEP TECH: European photonic wafer achieves 100 terabit optical interconnect speeds.",
-    "MARKETS: Project Amber Bridge clears first $10B multi-currency atomic swap in 380ms.",
-    "CLIMATE: Atacama Basin direct lithium extraction accord signed with zero evaporation.",
-  ];
+  const items =
+    headlines.length > 0
+      ? headlines
+      : [
+          "DICA RÁPIDA: Levante-se a cada 50 minutos sentado para ativar a circulação nas pernas e combater a fadiga.",
+          "POSTURA: Alongue os flexores do quadril por 60 segundos para aliviar a tensão na coluna lombar.",
+          "HIDRATAÇÃO: Beba um copo de água ao acordar para restabelecer os níveis hídricos e ativar o metabolismo.",
+          "CAMINHADA: Subir dois lances de escada no dia a dia queima até 5 vezes mais calorias que usar o elevador.",
+        ];
 
   const totalFaces = items.length;
   const faceHeight = 54; // px
-  // Cylinder radius for regular polygon
   const anglePerFace = 360 / totalFaces;
   const radius = Math.round(faceHeight / (2 * Math.tan(Math.PI / totalFaces)));
 
@@ -27,7 +28,7 @@ export function BreakingBar({ headlines }: BreakingBarProps) {
   const [isPaused, setIsPaused] = useState(false);
   const rotationDeg = activeIndex * -anglePerFace;
 
-  // Auto-advance rotation every 4 seconds unless paused
+  // Auto-advance rotation every 4.2 seconds unless paused
   useEffect(() => {
     if (isPaused) return;
     const timer = setInterval(() => {
@@ -50,20 +51,21 @@ export function BreakingBar({ headlines }: BreakingBarProps) {
       className="relative z-20 w-full bg-warmblack text-paper-100 border-y border-paper-300/40 dark:border-warmblack-100 py-2 sm:py-2.5 overflow-hidden shadow-md select-none"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
+      aria-label="Dicas rápidas em destaque"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
-        {/* Left Breaking Badge */}
+        {/* Left Breaking Badge: Relabeled as Dicas Rápidas */}
         <div className="flex items-center gap-2.5 shrink-0 pr-3 sm:pr-4 border-r border-warmblack-50/50">
           <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-saffron opacity-75" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-saffron" />
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
           </span>
-          <span className="font-mono text-[11px] font-bold tracking-[0.2em] text-saffron uppercase flex items-center gap-1.5">
-            <Radio className="w-3.5 h-3.5 text-saffron" />
-            WIRE BREAKING
+          <span className="font-mono text-[11px] font-bold tracking-[0.2em] text-emerald-400 uppercase flex items-center gap-1.5">
+            <Radio className="w-3.5 h-3.5 text-emerald-400" />
+            DICAS RÁPIDAS
           </span>
-          <span className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-saffron/20 text-saffron font-mono text-[9px] font-semibold">
-            CYLINDER 3D
+          <span className="hidden sm:inline-block px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[9px] font-semibold">
+            ROTATIVO 3D
           </span>
         </div>
 
@@ -96,7 +98,9 @@ export function BreakingBar({ headlines }: BreakingBarProps) {
                       isCurrent ? "text-paper-50 opacity-100" : "text-paper-400 opacity-20"
                     )}
                   >
-                    <span className="text-saffron mr-2 font-mono text-xs">[{String(idx + 1).padStart(2, "0")}]</span>
+                    <span className="text-emerald-400 mr-2 font-mono text-xs">
+                      [{String(idx + 1).padStart(2, "0")}]
+                    </span>
                     {headline}
                   </p>
                 </div>
@@ -108,19 +112,19 @@ export function BreakingBar({ headlines }: BreakingBarProps) {
         {/* Right Stepper Controls */}
         <div className="flex items-center gap-1 shrink-0 pl-2">
           <div className="text-[10px] font-mono text-paper-400 mr-2 hidden md:inline-block">
-            {isPaused ? "PAUSED" : "ROTATING"}
+            {isPaused ? "PAUSADO" : "GIRANDO"}
           </div>
           <button
             onClick={handlePrev}
-            className="p-1 rounded hover:bg-warmblack-100 text-paper-300 hover:text-saffron transition-colors"
-            aria-label="Previous breaking dispatch"
+            className="p-1 rounded hover:bg-warmblack-100 text-paper-300 hover:text-emerald-400 transition-colors"
+            aria-label="Dica anterior"
           >
             <ChevronUp className="w-4 h-4" />
           </button>
           <button
             onClick={handleNext}
-            className="p-1 rounded hover:bg-warmblack-100 text-paper-300 hover:text-saffron transition-colors"
-            aria-label="Next breaking dispatch"
+            className="p-1 rounded hover:bg-warmblack-100 text-paper-300 hover:text-emerald-400 transition-colors"
+            aria-label="Próxima dica"
           >
             <ChevronDown className="w-4 h-4" />
           </button>

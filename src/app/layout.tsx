@@ -8,37 +8,37 @@ import { Footer } from "@/components/layout/Footer";
 import { siteConfig } from "@/content/site.config";
 
 const serifFont = Playfair_Display({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-serif",
   display: "swap",
 });
 
 const sansFont = Plus_Jakarta_Sans({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-sans",
   display: "swap",
 });
 
 const monoFont = Space_Mono({
   weight: ["400", "700"],
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-mono",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   title: {
-    default: `${siteConfig.name} — ${siteConfig.tagline}`,
-    template: `%s | ${siteConfig.name}`,
+    default: "Fitness e atividade física: notícias e guias | Movimento na Rotina",
+    template: "%s | Movimento na Rotina",
   },
   description: siteConfig.description,
   metadataBase: new URL(siteConfig.url),
   openGraph: {
-    title: `${siteConfig.name} — Global Dispatches`,
+    title: "Fitness e atividade física: notícias e guias | Movimento na Rotina",
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.name,
-    locale: "en_US",
+    locale: "pt_BR",
     type: "website",
   },
   icons: {
@@ -53,11 +53,11 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="pt-BR"
       suppressHydrationWarning
       className={`${serifFont.variable} ${sansFont.variable} ${monoFont.variable}`}
     >
-      <body className="min-h-screen bg-background text-foreground antialiased selection:bg-saffron selection:text-warmblack-900">
+      <body className="min-h-screen bg-background text-foreground antialiased selection:bg-emerald-600 selection:text-white">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

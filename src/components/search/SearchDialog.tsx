@@ -23,7 +23,7 @@ interface SearchDialogProps {
   onClose: () => void;
 }
 
-const RECENT_SEARCHES_KEY = "saffron_recent_searches";
+const RECENT_SEARCHES_KEY = "movimento_recent_searches";
 
 export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
   const router = useRouter();
@@ -42,9 +42,7 @@ export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
       if (stored) {
         setRecentSearches(JSON.parse(stored).slice(0, 5));
       }
-    } catch {
-      // LocalStorage unavailable
-    }
+    } catch { }
   }, []);
 
   // Focus input when opened
@@ -112,13 +110,13 @@ export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
       const updated = [trimmed, ...recentSearches.filter((s) => s !== trimmed)].slice(0, 5);
       setRecentSearches(updated);
       localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
-    } catch {}
+    } catch { }
   };
 
   const handleSelectArticle = (slug: string, term?: string) => {
     if (term) saveRecentSearch(term);
     onClose();
-    router.push(`/article/${slug}`);
+    router.push(`/artigos/${slug}`);
   };
 
   const handleSubmitSearchPage = (e: React.FormEvent) => {
@@ -126,7 +124,7 @@ export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
     if (query.trim()) {
       saveRecentSearch(query);
       onClose();
-      router.push(`/search?q=${encodeURIComponent(query.trim())}`);
+      router.push(`/busca?q=${encodeURIComponent(query.trim())}`);
     }
   };
 
@@ -153,7 +151,7 @@ export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Search dispatches"
+      aria-label="Buscar artigos e guias"
       data-lenis-prevent
       className="fixed inset-0 z-50 flex items-start justify-center pt-4 sm:pt-20 px-3 sm:px-6 bg-warmblack/70 backdrop-blur-md transition-all duration-300"
       onClick={(e) => {
@@ -161,19 +159,19 @@ export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
       }}
     >
       <div
-        className="relative w-full max-w-2xl bg-paper-50 dark:bg-[#191410] rounded-2xl md:rounded-3xl border border-paper-300 dark:border-warmblack-100 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200"
+        className="relative w-full max-w-2xl bg-paper-50 dark:bg-[#13221D] rounded-2xl md:rounded-3xl border border-paper-300 dark:border-warmblack-100 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200"
         data-lenis-prevent
       >
         {/* Top Search Input Bar */}
         <form onSubmit={handleSubmitSearchPage} className="relative flex items-center border-b border-paper-200 dark:border-warmblack-100 px-4 sm:px-6 py-4">
-          <Search className="w-5 h-5 text-saffron shrink-0 mr-3" />
+          <Search className="w-5 h-5 text-emerald-500 shrink-0 mr-3" />
           <input
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Search dispatches, treaties, deep tech, authors..."
+            placeholder="Buscar por treino, caminhada, postura, tênis, hábitos..."
             className="w-full bg-transparent text-base sm:text-lg font-sans text-foreground placeholder:text-muted-foreground focus:outline-none"
           />
           {query && (
@@ -184,7 +182,7 @@ export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
                 inputRef.current?.focus();
               }}
               className="p-1 text-muted-foreground hover:text-foreground rounded-full hover:bg-paper-200 dark:hover:bg-warmblack-200 mr-2"
-              aria-label="Clear search"
+              aria-label="Limpar busca"
             >
               <X className="w-4 h-4" />
             </button>
@@ -222,9 +220,9 @@ export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
           {!isLoading && results.length > 0 && (
             <div className="space-y-1">
               <div className="flex items-center justify-between px-2 py-1 text-[11px] font-mono uppercase tracking-wider text-muted-foreground border-b border-paper-200 dark:border-warmblack-200 mb-2">
-                <span>{results.length} Dispatches Found</span>
+                <span>{results.length} Guias Encontrados</span>
                 <span className="flex items-center gap-1">
-                  Navigate <CornerDownLeft className="w-3 h-3 text-saffron" />
+                  Navegar <CornerDownLeft className="w-3 h-3 text-emerald-500" />
                 </span>
               </div>
               {results.map((res, index) => {
@@ -236,11 +234,10 @@ export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
                     key={article.id}
                     onClick={() => handleSelectArticle(article.slug, query)}
                     onMouseEnter={() => setSelectedIndex(index)}
-                    className={`flex items-center gap-3 sm:gap-4 p-2.5 sm:p-3 rounded-xl cursor-pointer transition-colors duration-150 ${
-                      isSelected
-                        ? "bg-saffron/15 dark:bg-saffron/20 border border-saffron/30"
+                    className={`flex items-center gap-3 sm:gap-4 p-2.5 sm:p-3 rounded-xl cursor-pointer transition-colors duration-150 ${isSelected
+                        ? "bg-emerald-500/15 dark:bg-emerald-500/20 border border-emerald-500/30"
                         : "hover:bg-paper-200/70 dark:hover:bg-warmblack-200/50 border border-transparent"
-                    }`}
+                      }`}
                   >
                     {/* Thumbnail */}
                     <div className="w-16 h-12 sm:w-20 sm:h-14 rounded-lg overflow-hidden shrink-0 border border-paper-300 dark:border-warmblack-100">
@@ -257,7 +254,7 @@ export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
                     {/* Metadata & Headline */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-paper-200 dark:bg-warmblack-200 text-saffron font-medium">
+                        <span className="text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full bg-paper-200 dark:bg-warmblack-200 text-emerald-600 dark:text-emerald-400 font-medium">
                           {article.category}
                         </span>
                         <span className="text-[10px] font-mono text-muted-foreground">
@@ -265,12 +262,11 @@ export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
                         </span>
                         {matchedField !== "title" && (
                           <span className="text-[9px] font-mono text-muted-foreground bg-paper-300 dark:bg-warmblack-100 px-1.5 rounded">
-                            matched {matchedField}
+                            em {matchedField}
                           </span>
                         )}
                       </div>
                       <h4 className="text-sm font-serif font-bold text-foreground line-clamp-1 leading-snug">
-                        {/* Highlight match */}
                         <HighlightText text={article.title} highlight={query} />
                       </h4>
                       <p className="text-xs text-muted-foreground line-clamp-1 font-sans mt-0.5">
@@ -279,9 +275,8 @@ export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
                     </div>
 
                     <ArrowRight
-                      className={`w-4 h-4 shrink-0 transition-transform ${
-                        isSelected ? "translate-x-1 text-saffron" : "text-muted-foreground/40"
-                      }`}
+                      className={`w-4 h-4 shrink-0 transition-transform ${isSelected ? "translate-x-1 text-emerald-500" : "text-muted-foreground/40"
+                        }`}
                     />
                   </div>
                 );
@@ -289,51 +284,51 @@ export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
 
               <div className="pt-3 text-center">
                 <Link
-                  href={`/search?q=${encodeURIComponent(query)}`}
+                  href={`/busca?q=${encodeURIComponent(query)}`}
                   onClick={onClose}
-                  className="inline-flex items-center gap-2 text-xs font-mono font-medium text-saffron hover:underline"
+                  className="inline-flex items-center gap-2 text-xs font-mono font-medium text-emerald-600 dark:text-emerald-400 hover:underline"
                 >
-                  View complete search dossier for &quot;{query}&quot; &rarr;
+                  Ver todos os resultados para &quot;{query}&quot; &rarr;
                 </Link>
               </div>
             </div>
           )}
 
-          {/* Empty State when no results found */}
+          {/* Empty State */}
           {!isLoading && query.trim().length >= 2 && results.length === 0 && (
             <div className="py-12 text-center space-y-3">
               <FileText className="w-10 h-10 text-muted-foreground/40 mx-auto" />
               <h3 className="font-serif text-lg font-bold text-foreground">
-                No matching dispatches found
+                Nenhum guia encontrado
               </h3>
               <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-                No articles matched &quot;{query}&quot;. Try exploring broader terms such as{" "}
-                <span className="text-saffron font-medium">quantum</span>,{" "}
-                <span className="text-saffron font-medium">lithium</span>, or{" "}
-                <span className="text-saffron font-medium">corridor</span>.
+                Não encontramos guias para &quot;{query}&quot;. Tente termos como{" "}
+                <span className="text-emerald-600 dark:text-emerald-400 font-medium">caminhada</span>,{" "}
+                <span className="text-emerald-600 dark:text-emerald-400 font-medium">casa</span> ou{" "}
+                <span className="text-emerald-600 dark:text-emerald-400 font-medium">postura</span>.
               </p>
             </div>
           )}
 
-          {/* Default State: Recent Searches & Trending Topics */}
+          {/* Default State: Recent Searches & Categories */}
           {!isLoading && query.trim().length < 2 && (
             <div className="space-y-6 py-2">
               {recentSearches.length > 0 && (
                 <div>
                   <div className="flex items-center justify-between text-xs font-mono uppercase tracking-wider text-muted-foreground mb-2 px-1">
                     <span className="flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5" /> Recent Queries
+                      <Clock className="w-3.5 h-3.5 text-emerald-500" /> Buscas Recentes
                     </span>
                     <button
                       onClick={() => {
                         setRecentSearches([]);
                         try {
                           localStorage.removeItem(RECENT_SEARCHES_KEY);
-                        } catch {}
+                        } catch { }
                       }}
                       className="text-[10px] text-muted-foreground hover:text-foreground"
                     >
-                      Clear
+                      Limpar
                     </button>
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -343,7 +338,7 @@ export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
                         onClick={() => {
                           setQuery(term);
                         }}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-sans bg-paper-200 dark:bg-warmblack-200 hover:bg-saffron/20 border border-paper-300 dark:border-warmblack-100 transition-colors"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-sans bg-paper-200 dark:bg-warmblack-200 hover:bg-emerald-500/20 border border-paper-300 dark:border-warmblack-100 transition-colors"
                       >
                         <Clock className="w-3 h-3 text-muted-foreground" />
                         <span>{term}</span>
@@ -353,24 +348,24 @@ export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
                 </div>
               )}
 
-              {/* Suggested Desks */}
+              {/* Suggested Sections */}
               <div>
                 <div className="flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-muted-foreground mb-3 px-1">
-                  <TrendingUp className="w-3.5 h-3.5 text-saffron" /> Browse Editorial Desks
+                  <TrendingUp className="w-3.5 h-3.5 text-emerald-500" /> Explorar Seções
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {siteConfig.categories.slice(0, 8).map((cat) => (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  {siteConfig.categories.map((cat) => (
                     <Link
                       key={cat.id}
-                      href={`/category/${cat.slug}`}
+                      href={`/secoes/${cat.slug}`}
                       onClick={onClose}
-                      className="p-3 rounded-xl border border-paper-200 dark:border-warmblack-100 hover:border-saffron/40 bg-paper-100/50 dark:bg-warmblack-200/30 transition-all text-left group"
+                      className="p-3 rounded-xl border border-paper-200 dark:border-warmblack-100 hover:border-emerald-500/40 bg-paper-100/50 dark:bg-warmblack-200/30 transition-all text-left group"
                     >
-                      <span className="text-xs font-serif font-bold group-hover:text-saffron transition-colors block">
+                      <span className="text-xs font-serif font-bold group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors block">
                         {cat.name}
                       </span>
                       <span className="text-[10px] font-mono text-muted-foreground">
-                        {cat.count} files
+                        {cat.count} guias
                       </span>
                     </Link>
                   ))}
@@ -387,22 +382,22 @@ export function SearchDialog({ isOpen, onClose }: SearchDialogProps) {
               <kbd className="px-1.5 py-0.5 rounded bg-paper-100 dark:bg-warmblack-100 border border-paper-300 dark:border-warmblack-50">
                 &uarr; &darr;
               </kbd>{" "}
-              select
+              navegar
             </span>
             <span>
               <kbd className="px-1.5 py-0.5 rounded bg-paper-100 dark:bg-warmblack-100 border border-paper-300 dark:border-warmblack-50">
                 &crarr;
               </kbd>{" "}
-              open
+              abrir
             </span>
             <span>
               <kbd className="px-1.5 py-0.5 rounded bg-paper-100 dark:bg-warmblack-100 border border-paper-300 dark:border-warmblack-50">
                 esc
               </kbd>{" "}
-              close
+              fechar
             </span>
           </div>
-          <span className="text-saffron font-medium">Saffron Press Intelligence Index</span>
+          <span className="text-emerald-600 dark:text-emerald-400 font-medium">Movimento na Rotina</span>
         </div>
       </div>
     </div>
@@ -418,7 +413,7 @@ function HighlightText({ text, highlight }: { text: string; highlight: string })
         part.toLowerCase() === highlight.toLowerCase() ? (
           <mark
             key={i}
-            className="bg-saffron/30 text-foreground font-semibold px-0.5 rounded"
+            className="bg-emerald-500/30 text-foreground font-semibold px-0.5 rounded"
           >
             {part}
           </mark>

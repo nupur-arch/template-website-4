@@ -8,28 +8,28 @@ import {
 import { Article, LiveStat, SearchResult, SplitFlapItem } from "@/types/article";
 
 /**
- * Mapper function to normalize external API article payloads into clean Article types.
- * Switching to real API in the future requires editing only this mapper and endpoints.
+ * Normaliza os dados dos artigos para o modelo unificado.
  */
 export function mapApiArticle(raw: any): Article {
-  if (!raw) throw new Error("Empty article payload");
+  if (!raw) throw new Error("Payload de artigo vazio");
   return {
     id: String(raw.id || raw._id || ""),
     slug: String(raw.slug || ""),
     title: String(raw.title || ""),
     excerpt: String(raw.excerpt || raw.summary || ""),
     content: String(raw.content || raw.body || ""),
-    category: String(raw.category || "General"),
-    categorySlug: String(raw.categorySlug || raw.category_slug || "general"),
+    category: String(raw.category || "Geral"),
+    categorySlug: String(raw.categorySlug || raw.category_slug || "geral"),
+    subtopic: raw.subtopic ? String(raw.subtopic) : undefined,
     author: {
-      id: String(raw.author?.id || "auth-anon"),
-      name: String(raw.author?.name || "Editorial Staff"),
-      title: String(raw.author?.title || "Staff Reporter"),
+      id: String(raw.author?.id || "auth-editorial"),
+      name: String(raw.author?.name || "Redação Movimento na Rotina"),
+      title: String(raw.author?.title || "Equipe Editorial"),
       avatar: raw.author?.avatar || undefined,
       bio: raw.author?.bio || undefined,
     },
     publishedAt: String(raw.publishedAt || raw.published_at || new Date().toISOString()),
-    readTimeMinutes: Number(raw.readTimeMinutes || raw.read_time || 5),
+    readTimeMinutes: Number(raw.readTimeMinutes || raw.read_time || 3),
     featuredOrder: raw.featuredOrder ? Number(raw.featuredOrder) : undefined,
     heroRank: raw.heroRank ? String(raw.heroRank) : undefined,
     isBreaking: Boolean(raw.isBreaking),
@@ -45,9 +45,12 @@ export function mapApiArticle(raw: any): Article {
   };
 }
 
+export async function getAllArticles(): Promise<Article[]> {
+  return MOCK_ARTICLES;
+}
+
 export async function getFeaturedHeroArticles(): Promise<Article[]> {
   if (isMockEnabled()) {
-    // Return exactly the 20 featured articles sorted by featuredOrder 1-20
     return MOCK_ARTICLES.filter((a) => a.featuredOrder !== undefined)
       .sort((a, b) => (a.featuredOrder || 0) - (b.featuredOrder || 0))
       .slice(0, 20);
@@ -91,7 +94,6 @@ export async function getTrendingArticles(limit: number = 10): Promise<Article[]
       (a, b) => (a.trendingRank || 99) - (b.trendingRank || 99)
     );
     if (trending.length >= limit) return trending.slice(0, limit);
-    // Fill remaining if needed
     return [...trending, ...MOCK_ARTICLES.filter((a) => !a.isTrending)].slice(0, limit);
   }
   try {
@@ -145,7 +147,6 @@ export async function getRelatedArticles(slug: string, limit: number = 3): Promi
   const pool = MOCK_ARTICLES.filter((a) => a.slug !== slug);
   if (!current) return pool.slice(0, limit);
 
-  // Match by category first
   const sameCategory = pool.filter((a) => a.categorySlug === current.categorySlug);
   if (sameCategory.length >= limit) return sameCategory.slice(0, limit);
 
@@ -153,31 +154,31 @@ export async function getRelatedArticles(slug: string, limit: number = 3): Promi
   return [...sameCategory, ...remaining].slice(0, limit);
 }
 
-export async function getCategoryArticles(categorySlug: string): Promise<Article[]> {
-  if (isMockEnabled()) {
-    return MOCK_ARTICLES.filter(
-      (a) => a.categorySlug.toLowerCase() === categorySlug.toLowerCase()
-    );
+export async function getCategoryArticles(
+  categorySlug: string,
+  subtopic?: string
+): Promise<Article[]> {
+  const normalizedCategory = categorySlug.toLowerCase();
+  let list = MOCK_ARTICLES.filter(
+    (a) => a.categorySlug.toLowerCase() === normalizedCategory
+  );
+
+  if (subtopic && subtopic !== "todos" && subtopic !== "all") {
+    const normalizedSub = subtopic.toLowerCase();
+    list = list.filter((a) => a.subtopic?.toLowerCase() === normalizedSub);
   }
-  try {
-    const raw = await apiClient<any[]>(`/articles/category/${categorySlug}`);
-    return raw.map(mapApiArticle);
-  } catch {
-    return MOCK_ARTICLES.filter(
-      (a) => a.categorySlug.toLowerCase() === categorySlug.toLowerCase()
-    );
-  }
+
+  return list;
 }
 
 export async function searchArticles(
   query: string,
-  options?: { category?: string; signal?: AbortSignal }
+  options?: { category?: string; subtopic?: string; signal?: AbortSignal }
 ): Promise<SearchResult[]> {
   const cleanQ = query.trim().toLowerCase();
   if (cleanQ.length < 2) return [];
 
   if (isMockEnabled()) {
-    // Artificial small delay to test debounce & loading skeletons
     await new Promise((resolve) => setTimeout(resolve, 80));
 
     if (options?.signal?.aborted) {
@@ -188,19 +189,28 @@ export async function searchArticles(
       const matchCat =
         !options?.category ||
         options.category === "all" ||
+        options.category === "todas" ||
         a.categorySlug === options.category;
       if (!matchCat) return false;
+
+      const matchSub =
+        !options?.subtopic ||
+        options.subtopic === "all" ||
+        options.subtopic === "todos" ||
+        a.subtopic === options.subtopic;
+      if (!matchSub) return false;
 
       return (
         a.title.toLowerCase().includes(cleanQ) ||
         a.excerpt.toLowerCase().includes(cleanQ) ||
         a.category.toLowerCase().includes(cleanQ) ||
+        (a.subtopic && a.subtopic.toLowerCase().includes(cleanQ)) ||
         a.tags.some((t) => t.toLowerCase().includes(cleanQ))
       );
     });
 
     return filtered.map((article) => {
-      let matchedField: "title" | "excerpt" | "tags" | "category" = "title";
+      let matchedField: "title" | "excerpt" | "tags" | "category" | "subtopic" = "title";
       let matchIndices: [number, number] | undefined;
 
       const titleIdx = article.title.toLowerCase().indexOf(cleanQ);
@@ -211,6 +221,8 @@ export async function searchArticles(
         matchedField = "excerpt";
       } else if (article.category.toLowerCase().indexOf(cleanQ) >= 0) {
         matchedField = "category";
+      } else if (article.subtopic && article.subtopic.toLowerCase().indexOf(cleanQ) >= 0) {
+        matchedField = "subtopic";
       } else {
         matchedField = "tags";
       }
@@ -221,7 +233,7 @@ export async function searchArticles(
 
   try {
     const raw = await apiClient<any[]>("/search", {
-      params: { q: cleanQ, category: options?.category },
+      params: { q: cleanQ, category: options?.category, subtopic: options?.subtopic },
       signal: options?.signal,
     });
     return raw.map((item) => ({

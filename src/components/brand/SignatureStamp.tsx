@@ -12,8 +12,8 @@ interface SignatureStampProps {
 export function SignatureStamp({
   size = 110,
   className = "",
-  text = "LIVE • 20 STORIES • SAFFRON PRESS • EST. 2026 • ",
-  centerText = "24/7",
+  text = "AO VIVO • 20+ GUIAS • MOVIMENTO NA ROTINA • EST. 2026 • ",
+  centerText = "ATIVO",
 }: SignatureStampProps) {
   const radius = 42;
   const viewBoxSize = 100;
@@ -26,7 +26,7 @@ export function SignatureStamp({
         className
       )}
       style={{ width: size, height: size }}
-      aria-label="Saffron Press Signature Circular Stamp"
+      aria-label="Selo Circular Movimento na Rotina"
     >
       {/* Outer rotating SVG text ring */}
       <svg
@@ -49,7 +49,7 @@ export function SignatureStamp({
           stroke="currentColor"
           strokeWidth="0.75"
           strokeDasharray="2 2"
-          className="opacity-30"
+          className="opacity-25"
         />
         <circle
           cx={center}
@@ -58,11 +58,11 @@ export function SignatureStamp({
           fill="none"
           stroke="currentColor"
           strokeWidth="0.75"
-          className="opacity-35"
+          className="opacity-30"
         />
 
         {/* Circular text along path */}
-        <text className="text-[7.6px] font-mono uppercase tracking-[0.22em] font-semibold fill-current">
+        <text className="text-[7.2px] font-mono uppercase tracking-[0.22em] font-semibold fill-current">
           <textPath href="#stampCirclePath" startOffset="0%">
             {text}
           </textPath>
@@ -71,8 +71,8 @@ export function SignatureStamp({
 
       {/* Center Static Badge / Accent */}
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-        <div className="w-9 h-9 rounded-full bg-saffron/15 dark:bg-saffron/20 border border-saffron/40 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
-          <span className="text-[10px] font-mono font-bold text-saffron tracking-wider">
+        <div className="w-9 h-9 rounded-full bg-emerald-500/15 dark:bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
+          <span className="text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400 tracking-wider">
             {centerText}
           </span>
         </div>

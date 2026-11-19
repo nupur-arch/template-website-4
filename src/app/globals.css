@@ -4,43 +4,43 @@
 
 @layer base {
   :root {
-    --background: #FBF9F5;
-    --foreground: #15110D;
+    --background: #F4FAF7;
+    --foreground: #10201A;
     --card: #FFFFFF;
-    --card-foreground: #15110D;
+    --card-foreground: #10201A;
     --popover: #FFFFFF;
-    --popover-foreground: #15110D;
-    --primary: #15110D;
-    --primary-foreground: #FBF9F5;
-    --secondary: #F0ECE3;
-    --secondary-foreground: #15110D;
-    --muted: #EFECE6;
-    --muted-foreground: #6A6359;
-    --accent: #FFB000;
-    --accent-foreground: #15110D;
-    --border: #E5DFD3;
-    --input: #E5DFD3;
-    --ring: #FFB000;
+    --popover-foreground: #10201A;
+    --primary: #0E9F6E;
+    --primary-foreground: #FFFFFF;
+    --secondary: #E6F3EE;
+    --secondary-foreground: #10201A;
+    --muted: #E1EFEA;
+    --muted-foreground: #4B6358;
+    --accent: #F5B700;
+    --accent-foreground: #0F1B17;
+    --border: #D1E5DC;
+    --input: #D1E5DC;
+    --ring: #0E9F6E;
   }
 
   .dark {
-    --background: #15110D;
-    --foreground: #F5F2EB;
-    --card: #1D1813;
-    --card-foreground: #F5F2EB;
-    --popover: #1D1813;
-    --popover-foreground: #F5F2EB;
-    --primary: #FFB000;
-    --primary-foreground: #15110D;
-    --secondary: #241D17;
-    --secondary-foreground: #F5F2EB;
-    --muted: #241E18;
-    --muted-foreground: #9E9588;
-    --accent: #FFB000;
-    --accent-foreground: #15110D;
-    --border: #2C241D;
-    --input: #2C241D;
-    --ring: #FFB000;
+    --background: #0F1B17;
+    --foreground: #F4FAF7;
+    --card: #14231E;
+    --card-foreground: #F4FAF7;
+    --popover: #14231E;
+    --popover-foreground: #F4FAF7;
+    --primary: #0E9F6E;
+    --primary-foreground: #0F1B17;
+    --secondary: #192C25;
+    --secondary-foreground: #F4FAF7;
+    --muted: #1A2E27;
+    --muted-foreground: #8FA89E;
+    --accent: #F5B700;
+    --accent-foreground: #0F1B17;
+    --border: #1E362E;
+    --input: #1E362E;
+    --ring: #0E9F6E;
   }
 }
 
@@ -64,7 +64,7 @@
 
   /* Focus visible accessibility outline */
   :focus-visible {
-    outline: 2px solid #FFB000;
+    outline: 2px solid #0E9F6E;
     outline-offset: 2px;
   }
 }
@@ -93,11 +93,11 @@
 
 /* 3D Coverflow Card Reflection */
 .coverflow-reflection {
-  -webkit-box-reflect: below 12px linear-gradient(to bottom, transparent 65%, rgba(0, 0, 0, 0.28));
+  -webkit-box-reflect: below 12px linear-gradient(to bottom, transparent 65%, rgba(15, 27, 23, 0.28));
 }
 
 .dark .coverflow-reflection {
-  -webkit-box-reflect: below 12px linear-gradient(to bottom, transparent 55%, rgba(255, 176, 0, 0.18));
+  -webkit-box-reflect: below 12px linear-gradient(to bottom, transparent 55%, rgba(14, 159, 110, 0.22));
 }
 
 /* Editorial Thin Rules */

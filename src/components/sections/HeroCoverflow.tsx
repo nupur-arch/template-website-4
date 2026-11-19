@@ -89,7 +89,7 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
     [items.length]
   );
 
-  // Initialize card positions IMMEDIATELY on mount (Fixes overlapping text in ss-2)
+  // Initialize card positions immediately on mount
   useEffect(() => {
     applyCardTransforms(0);
   }, [applyCardTransforms]);
@@ -146,12 +146,13 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
     <section
       ref={containerRef}
       id="hero"
+      aria-label="Destaques em 3D Coverflow"
       className={cn(
         "relative w-full bg-background border-b border-paper-300 dark:border-warmblack-100",
-        isReducedMotion ? "py-20" : "h-[380vh]" // 380vh runway ensures smooth scrolling and perfect holding
+        isReducedMotion ? "py-20" : "h-[380vh]"
       )}
     >
-      {/* Pinned Sticky Viewport: elevated into the marked position in ss-3 */}
+      {/* Pinned Sticky Viewport */}
       <div
         ref={pinStageRef}
         className={cn(
@@ -160,17 +161,17 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
         )}
       >
         {/* Subtle Ambient Background Grain */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.035] dark:opacity-[0.06] bg-[radial-gradient(#FFB000_1px,transparent_1px)] [background-size:24px_24px]" />
+        <div className="absolute inset-0 pointer-events-none opacity-[0.035] dark:opacity-[0.06] bg-[radial-gradient(#0E9F6E_1px,transparent_1px)] [background-size:24px_24px]" />
 
-        {/* 3D Coverflow Stage — Elevated directly to the primary visible viewport zone */}
+        {/* 3D Coverflow Stage */}
         {!isReducedMotion ? (
           <div className="relative w-full flex-1 flex items-center justify-center">
             {/* Left Nav Pill Button */}
             <button
               onClick={() => navigateToCard(currentIndex - 1)}
               disabled={currentIndex === 0}
-              className="absolute left-3 sm:left-10 z-40 p-3 rounded-full bg-warmblack/80 hover:bg-saffron text-white hover:text-warmblack border border-white/10 backdrop-blur-md shadow-2xl transition-all disabled:opacity-20 disabled:pointer-events-none hover:scale-110 active:scale-95"
-              aria-label="Previous story"
+              className="absolute left-3 sm:left-10 z-40 p-3 rounded-full bg-warmblack/80 hover:bg-emerald-600 text-white border border-white/10 backdrop-blur-md shadow-2xl transition-all disabled:opacity-20 disabled:pointer-events-none hover:scale-110 active:scale-95"
+              aria-label="Guia anterior"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -179,13 +180,13 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
             <button
               onClick={() => navigateToCard(currentIndex + 1)}
               disabled={currentIndex === items.length - 1}
-              className="absolute right-3 sm:right-10 z-40 p-3 rounded-full bg-warmblack/80 hover:bg-saffron text-white hover:text-warmblack border border-white/10 backdrop-blur-md shadow-2xl transition-all disabled:opacity-20 disabled:pointer-events-none hover:scale-110 active:scale-95"
-              aria-label="Next story"
+              className="absolute right-3 sm:right-10 z-40 p-3 rounded-full bg-warmblack/80 hover:bg-emerald-600 text-white border border-white/10 backdrop-blur-md shadow-2xl transition-all disabled:opacity-20 disabled:pointer-events-none hover:scale-110 active:scale-95"
+              aria-label="Próximo guia"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
 
-            {/* 3D Track Container: Card dimensions optimized to prevent any bottom clipping */}
+            {/* 3D Track Container */}
             <div
               ref={trackRef}
               className="perspective-deep relative w-full max-w-6xl h-[420px] sm:h-[480px] md:h-[500px] flex items-center justify-center"
@@ -205,15 +206,15 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
                     }}
                     className={cn(
                       "absolute w-[300px] sm:w-[380px] md:w-[430px] h-[390px] sm:h-[450px] md:h-[480px] rounded-3xl preserve-3d will-change-transform cursor-pointer transition-shadow duration-300",
-                      isSelected && "shadow-[0_25px_60px_-15px_rgba(255,176,0,0.35)]"
+                      isSelected && "shadow-[0_25px_60px_-15px_rgba(14,159,110,0.35)]"
                     )}
                     style={{
                       transformOrigin: "50% 50% -120px",
                     }}
                   >
                     <Link
-                      href={`/article/${article.slug}`}
-                      className="block w-full h-full rounded-3xl overflow-hidden bg-card border border-paper-300 dark:border-warmblack-100 shadow-2xl group hover:border-saffron/70 relative focus:outline-none focus-visible:ring-2 focus-visible:ring-saffron coverflow-reflection"
+                      href={`/artigos/${article.slug}`}
+                      className="block w-full h-full rounded-3xl overflow-hidden bg-card border border-paper-300 dark:border-warmblack-100 shadow-2xl group hover:border-emerald-500/70 relative focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 coverflow-reflection"
                     >
                       {/* Cover Photo */}
                       <div className="relative w-full h-[54%] overflow-hidden bg-paper-200 dark:bg-warmblack-900">
@@ -228,12 +229,12 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
 
                         {/* Rank Pill with Flame Icon */}
                         <div className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-warmblack/85 backdrop-blur-md border border-white/10 text-white font-mono text-[11px] font-bold flex items-center gap-1 shadow-md">
-                          <Flame className="w-3 h-3 text-saffron" />
+                          <Flame className="w-3 h-3 text-amber-400" />
                           <span>#{String(idx + 1).padStart(2, "0")}</span>
                         </div>
 
                         {/* Category Pill with Icon */}
-                        <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-saffron text-warmblack-950 font-mono text-[10px] uppercase tracking-wider font-bold shadow-md flex items-center gap-1.5">
+                        <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-emerald-600 text-white font-mono text-[10px] uppercase tracking-wider font-bold shadow-md flex items-center gap-1.5">
                           <CategoryIcon categorySlug={article.categorySlug} className="w-3 h-3" />
                           <span>{article.category}</span>
                         </div>
@@ -245,8 +246,8 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
                           {/* Metadata Icons Row */}
                           <div className="flex items-center gap-3 text-[10px] font-mono text-muted-foreground mb-1.5">
                             <span className="flex items-center gap-1">
-                              <Clock className="w-3 h-3 text-saffron" />
-                              {article.readTimeMinutes}m
+                              <Clock className="w-3 h-3 text-emerald-500" />
+                              {article.readTimeMinutes} min
                             </span>
                             <span>•</span>
                             <span className="flex items-center gap-1 truncate">
@@ -255,7 +256,7 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
                             </span>
                           </div>
 
-                          <h2 className="font-serif font-bold text-base sm:text-lg md:text-xl line-clamp-2 text-foreground group-hover:text-saffron transition-colors leading-snug">
+                          <h2 className="font-serif font-bold text-base sm:text-lg md:text-xl line-clamp-2 text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors leading-snug">
                             {article.title}
                           </h2>
                         </div>
@@ -263,9 +264,9 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
                         {/* Bottom Actions Row */}
                         <div className="pt-2 border-t border-paper-200 dark:border-warmblack-100 flex items-center justify-between">
                           <span className="text-[10px] font-mono text-muted-foreground truncate max-w-[70%]">
-                            #{article.tags[0] || "Dispatch"}
+                            #{article.subtopic || article.tags[0] || "Movimento"}
                           </span>
-                          <div className="w-7 h-7 rounded-full bg-saffron/15 group-hover:bg-saffron text-saffron group-hover:text-warmblack flex items-center justify-center transition-colors shadow-sm">
+                          <div className="w-7 h-7 rounded-full bg-emerald-500/15 group-hover:bg-emerald-600 text-emerald-600 group-hover:text-white flex items-center justify-center transition-colors shadow-sm">
                             <ArrowUpRight className="w-4 h-4" />
                           </div>
                         </div>
@@ -282,8 +283,8 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
             {items.map((article, idx) => (
               <Link
                 key={article.id}
-                href={`/article/${article.slug}`}
-                className="group rounded-3xl overflow-hidden bg-card border border-paper-300 dark:border-warmblack-100 p-4 block hover:border-saffron shadow-md"
+                href={`/artigos/${article.slug}`}
+                className="group rounded-3xl overflow-hidden bg-card border border-paper-300 dark:border-warmblack-100 p-4 block hover:border-emerald-500 shadow-md"
               >
                 <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-3">
                   <SafeImage
@@ -297,11 +298,11 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
                     #{String(idx + 1).padStart(2, "0")}
                   </div>
                 </div>
-                <div className="text-[10px] font-mono text-saffron uppercase font-bold mb-1 flex items-center gap-1">
+                <div className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 uppercase font-bold mb-1 flex items-center gap-1">
                   <CategoryIcon categorySlug={article.categorySlug} className="w-3 h-3" />
                   {article.category}
                 </div>
-                <h3 className="font-serif font-bold text-base text-foreground group-hover:text-saffron line-clamp-2">
+                <h3 className="font-serif font-bold text-base text-foreground group-hover:text-emerald-600 dark:group-hover:text-emerald-400 line-clamp-2">
                   {article.title}
                 </h3>
               </Link>
@@ -309,12 +310,12 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
           </div>
         )}
 
-        {/* Bottom Pinterest-Style Scrubber & Counter Pill */}
+        {/* Bottom Scrubber & Counter Pill */}
         <div className="relative z-20 w-full max-w-md px-4 mt-2">
-          <div className="bg-[#15110D]/90 dark:bg-[#120E0A]/90 backdrop-blur-xl rounded-full border border-white/10 dark:border-saffron/30 px-3 py-2 shadow-2xl flex items-center gap-3 text-paper-50">
+          <div className="bg-[#0F1B17]/90 dark:bg-[#09110F]/90 backdrop-blur-xl rounded-full border border-white/10 dark:border-emerald-500/30 px-3 py-2 shadow-2xl flex items-center gap-3 text-paper-50">
             {/* Number Pill */}
             <div className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/10 font-mono font-bold text-xs">
-              <span className="text-saffron text-sm">{activeNumber}</span>
+              <span className="text-emerald-400 text-sm">{activeNumber}</span>
               <span className="text-paper-400">/</span>
               <span className="text-paper-400">{totalNumber}</span>
             </div>
@@ -328,20 +329,20 @@ export function HeroCoverflow({ articles }: HeroCoverflowProps) {
                 const ratio = clickX / rect.width;
                 navigateToCard(Math.round(ratio * (items.length - 1)));
               }}
-              title="Click to jump to card"
+              title="Clique para avançar até o guia"
             >
               <div
-                className="h-full bg-saffron rounded-full transition-all duration-150 ease-out group-hover:brightness-110"
+                className="h-full bg-emerald-500 rounded-full transition-all duration-150 ease-out group-hover:brightness-110"
                 style={{
                   width: `${Math.max(5, scrollProgress * 100)}%`,
                 }}
               />
             </div>
 
-            {/* Scroll Indicator with Layers Icon */}
-            <div className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider text-saffron pr-1">
-              <Layers className="w-3.5 h-3.5 text-saffron animate-pulse" />
-              <span className="hidden sm:inline">Scroll</span>
+            {/* Scroll Indicator */}
+            <div className="flex items-center gap-1 text-[10px] font-mono uppercase tracking-wider text-emerald-400 pr-1">
+              <Layers className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+              <span className="hidden sm:inline">Deslize</span>
             </div>
           </div>
         </div>

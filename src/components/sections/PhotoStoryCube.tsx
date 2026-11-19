@@ -7,7 +7,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowUpRight,
   User,
-  Clock,
   Eye,
   ChevronLeft,
   ChevronRight,
@@ -115,7 +114,7 @@ export function PhotoStoryCube({ faces }: PhotoStoryCubeProps) {
         isReducedMotion ? "py-20" : "h-[280vh]"
       )}
     >
-      {/* Sticky Viewport: Dedicated top clearance (pt-24) prevents any overlap with floating navbar */}
+      {/* Sticky Viewport */}
       <div
         className={cn(
           "w-full flex flex-col justify-between items-center select-none overflow-hidden",
@@ -123,46 +122,52 @@ export function PhotoStoryCube({ faces }: PhotoStoryCubeProps) {
         )}
       >
         {/* Ambient radial glow */}
-        <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(circle_at_50%_50%,#FFB000_0%,transparent_65%)]" />
+        <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(circle_at_50%_50%,#0E9F6E_0%,transparent_65%)]" />
 
-        {/* Top Header: Clean title without redundant badges */}
+        {/* Top Header: Relabeled to Fotorreportagens */}
         <div className="relative z-10 w-full max-w-5xl px-4 sm:px-6 flex items-center justify-between">
           <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-emerald-400 font-bold flex items-center gap-1.5">
+                <Camera className="w-3.5 h-3.5 text-emerald-400" />
+                06 / FOTORREPORTAGENS
+              </span>
+            </div>
             <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight">
-              The Photo Prism
+              Fotorreportagens do Movimento
             </h2>
           </div>
 
-          {/* Compact Stepper Pill */}
+          {/* Stepper Pill */}
           <div className="flex items-center gap-1.5 sm:gap-2">
             <button
               onClick={handlePrev}
-              className="p-1.5 sm:p-2 rounded-full bg-warmblack-100 hover:bg-saffron hover:text-warmblack border border-warmblack-50 transition-colors shadow-sm active:scale-95"
-              aria-label="Previous face"
+              className="p-1.5 sm:p-2 rounded-full bg-warmblack-100 hover:bg-emerald-600 hover:text-white border border-warmblack-50 transition-colors shadow-sm active:scale-95"
+              aria-label="Face anterior"
             >
               <ChevronLeft className="w-3.5 h-3.5" />
             </button>
             <div className="flex items-center gap-1.5 bg-warmblack-200/90 border border-warmblack-50 px-3 py-1 rounded-full text-xs font-mono text-paper-300 shadow-md">
-              <Box className="w-3 h-3 text-saffron" />
+              <Box className="w-3 h-3 text-emerald-400" />
               <span>Face {activeFace + 1} / 4</span>
             </div>
             <button
               onClick={handleNext}
-              className="p-1.5 sm:p-2 rounded-full bg-warmblack-100 hover:bg-saffron hover:text-warmblack border border-warmblack-50 transition-colors shadow-sm active:scale-95"
-              aria-label="Next face"
+              className="p-1.5 sm:p-2 rounded-full bg-warmblack-100 hover:bg-emerald-600 hover:text-white border border-warmblack-50 transition-colors shadow-sm active:scale-95"
+              aria-label="Próxima face"
             >
               <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
 
-        {/* 3D Prism Stage: Compact dimensions ensure the box never gets cut or collides with headers */}
+        {/* 3D Prism Stage */}
         {!isReducedMotion ? (
           <div
             className="perspective-deep relative w-full flex-1 flex items-center justify-center my-auto py-2"
             style={{ perspective: "1300px" }}
           >
-            {/* The Rotating 3D Prism Box: Scaled for perfect headroom and zero cut-off */}
+            {/* The Rotating 3D Prism Box */}
             <div
               ref={cubeRef}
               className="preserve-3d relative w-[280px] sm:w-[350px] md:w-[400px] h-[320px] sm:h-[350px] md:h-[370px]"
@@ -175,7 +180,6 @@ export function PhotoStoryCube({ faces }: PhotoStoryCubeProps) {
                 const angle = index * 90;
                 const isCurrent = activeFace === index;
 
-                // Dynamic angular difference for realistic face shadow
                 const faceRelAngle = Math.abs(((-currentAngle - angle + 360 + 180) % 360) - 180);
                 const shadowOpacity = Math.min(0.65, Math.max(0, (faceRelAngle / 90) * 0.55));
 
@@ -192,7 +196,7 @@ export function PhotoStoryCube({ faces }: PhotoStoryCubeProps) {
                       className={cn(
                         "relative w-full h-full rounded-3xl overflow-hidden bg-warmblack-100 border transition-all duration-300 shadow-2xl",
                         isCurrent
-                          ? "border-saffron/70 shadow-[0_20px_50px_rgba(255,176,0,0.25)] ring-1 ring-saffron/50"
+                          ? "border-emerald-500/70 shadow-[0_20px_50px_rgba(14,159,110,0.25)] ring-1 ring-emerald-500/50"
                           : "border-warmblack-50/70 opacity-90"
                       )}
                       style={{
@@ -211,7 +215,7 @@ export function PhotoStoryCube({ faces }: PhotoStoryCubeProps) {
                           className="object-cover"
                         />
 
-                        {/* Dynamic 3D lighting shadow scrim */}
+                        {/* 3D lighting shadow scrim */}
                         <div
                           className="absolute inset-0 bg-black pointer-events-none transition-opacity duration-150"
                           style={{ opacity: shadowOpacity }}
@@ -222,8 +226,8 @@ export function PhotoStoryCube({ faces }: PhotoStoryCubeProps) {
 
                         {/* Top Face Label Tag */}
                         <div className="absolute top-3.5 inset-x-3.5 flex items-center justify-between z-10">
-                          <span className="px-2.5 py-0.5 rounded-full bg-warmblack/85 backdrop-blur-md border border-white/10 text-saffron font-mono text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md">
-                            <Camera className="w-3 h-3 text-saffron" />
+                          <span className="px-2.5 py-0.5 rounded-full bg-warmblack/85 backdrop-blur-md border border-white/10 text-emerald-400 font-mono text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md">
+                            <Camera className="w-3 h-3 text-emerald-400" />
                             {face.photoStoryAngle || `Face 0${index + 1}`}
                           </span>
                           <span className="px-2 py-0.5 rounded-full bg-black/70 text-white font-mono text-[11px]">
@@ -233,8 +237,8 @@ export function PhotoStoryCube({ faces }: PhotoStoryCubeProps) {
 
                         {/* Bottom Story Content */}
                         <div className="absolute bottom-0 inset-x-0 p-4 sm:p-5 z-10 space-y-2">
-                          <span className="text-[10px] font-mono uppercase tracking-widest text-saffron font-semibold flex items-center gap-1">
-                            <Eye className="w-3 h-3 text-saffron" /> Photographic Chronicle
+                          <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-400 font-semibold flex items-center gap-1">
+                            <Eye className="w-3 h-3 text-emerald-400" /> Ensaio do Movimento
                           </span>
                           <h3 className="font-serif text-base sm:text-xl font-black text-white leading-tight line-clamp-2">
                             {face.title}
@@ -245,14 +249,14 @@ export function PhotoStoryCube({ faces }: PhotoStoryCubeProps) {
 
                           <div className="pt-2.5 border-t border-white/15 flex items-center justify-between">
                             <span className="text-xs font-mono text-paper-400 flex items-center gap-1">
-                              <User className="w-3 h-3 text-saffron" />
+                              <User className="w-3 h-3 text-emerald-400" />
                               {face.author.name}
                             </span>
                             <Link
-                              href={`/article/${face.slug}`}
-                              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-saffron text-warmblack font-mono text-[11px] font-bold uppercase tracking-wider hover:bg-saffron-400 transition-colors shadow-md"
+                              href={`/artigos/${face.slug}`}
+                              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-600 text-white font-mono text-[11px] font-bold uppercase tracking-wider hover:bg-emerald-500 transition-colors shadow-md"
                             >
-                              <span>Explore</span>
+                              <span>Explorar</span>
                               <ArrowUpRight className="w-3 h-3" />
                             </Link>
                           </div>
@@ -280,7 +284,7 @@ export function PhotoStoryCube({ faces }: PhotoStoryCubeProps) {
                     fill
                     className="object-cover"
                   />
-                  <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-warmblack/80 text-saffron font-mono text-xs">
+                  <div className="absolute top-2 left-2 px-2 py-0.5 rounded bg-warmblack/80 text-emerald-400 font-mono text-xs">
                     Face 0{index + 1}
                   </div>
                 </div>

@@ -14,6 +14,7 @@ export interface Article {
   content: string; // Markdown formatted
   category: string;
   categorySlug: string;
+  subtopic?: string; // Subtopic filter chip (e.g. academia, casa, vestuario, acessorios, etc.)
   author: Author;
   publishedAt: string;
   readTimeMinutes: number;
@@ -37,7 +38,7 @@ export interface Article {
 
 export interface SearchResult {
   article: Article;
-  matchedField: "title" | "excerpt" | "tags" | "category";
+  matchedField: "title" | "excerpt" | "tags" | "category" | "subtopic";
   matchIndices?: [number, number];
 }
 
@@ -57,4 +58,13 @@ export interface SplitFlapItem {
   category: string;
   headline: string;
   status: "BREAKING" | "CONFIRMED" | "DISPATCHED" | "UPDATING";
+}
+
+export interface NewsItem {
+  title: string;
+  date: string;
+  summary: string;
+  link: string;
+  source: string;
+  isLocalFallback?: boolean;
 }
